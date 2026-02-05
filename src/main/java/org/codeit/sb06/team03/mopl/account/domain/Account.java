@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 import static org.codeit.sb06.team03.mopl.account.domain.event.AccountEvent.AccountRegisteredEvent;
+import static org.codeit.sb06.team03.mopl.account.domain.event.AccountEvent.RoleUpdatedEvent;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -63,5 +64,13 @@ public class Account extends AbstractAggregateRoot<Account> {
         account.locked = false;
         account.registerEvent(new AccountRegisteredEvent());
         return account;
+    }
+
+    public Account updateRole(Role role) {
+        if (this.role != role) {
+            this.role = role;
+            this.registerEvent(new RoleUpdatedEvent(role));
+        }
+        return this;
     }
 }
