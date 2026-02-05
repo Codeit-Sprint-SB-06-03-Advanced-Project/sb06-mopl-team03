@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 @Embeddable
 public record EmailAddress(
         @NotNull
-        @Column(name = "email_address", nullable = false, updatable = false, unique = true)
+        @Column(name = "email_address", nullable = false, unique = true)
         String value
 ) {
 
