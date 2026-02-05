@@ -16,4 +16,8 @@ public class AccountService {
         Password password = passwordEncryptionPolicy.apply(rawPassword);
         return Account.create(emailAddress, password);
     }
+
+    public Account updateRole(Account account, Role role) {
+        return account.updateRole(role);
+    }
 }
