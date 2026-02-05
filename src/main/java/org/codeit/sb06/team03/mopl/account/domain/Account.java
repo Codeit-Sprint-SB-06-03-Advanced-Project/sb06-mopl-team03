@@ -25,7 +25,6 @@ import static org.codeit.sb06.team03.mopl.account.domain.event.AccountEvent.Acco
 public class Account extends AbstractAggregateRoot<Account> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
 
@@ -57,6 +56,7 @@ public class Account extends AbstractAggregateRoot<Account> {
 
     public static Account create(EmailAddress emailAddress, Password password) {
         var account = new Account();
+        account.id = UUID.randomUUID();
         account.emailAddress = emailAddress;
         account.password = password;
         account.role = Role.USER;
