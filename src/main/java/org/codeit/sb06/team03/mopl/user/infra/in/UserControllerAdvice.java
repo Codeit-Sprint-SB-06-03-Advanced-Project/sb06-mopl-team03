@@ -2,8 +2,8 @@ package org.codeit.sb06.team03.mopl.user.infra.in;
 
 import lombok.extern.slf4j.Slf4j;
 import org.codeit.sb06.team03.mopl.account.domain.exception.AccountRegistrationFailedException;
-import org.codeit.sb06.team03.mopl.account.domain.exception.EmailAlreadyExistsException;
-import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidEmailException;
+import org.codeit.sb06.team03.mopl.account.domain.exception.EmailAddressAlreadyExistsException;
+import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidEmailAddressException;
 import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidPasswordException;
 import org.codeit.sb06.team03.mopl.common.error.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,8 @@ import java.util.Collections;
 @RestControllerAdvice(basePackageClasses = UserController.class)
 public class UserControllerAdvice {
 
-    @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+    @ExceptionHandler(EmailAddressAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAddressAlreadyExistsException e) {
         log.error(e.getMessage());
 
         var errorResponse = new ErrorResponse(
@@ -30,8 +30,8 @@ public class UserControllerAdvice {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
     }
 
-    @ExceptionHandler(InvalidEmailException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidEmailException(InvalidEmailException e) {
+    @ExceptionHandler(InvalidEmailAddressException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidEmailException(InvalidEmailAddressException e) {
         log.error(e.getMessage());
 
         var errorResponse = new ErrorResponse(

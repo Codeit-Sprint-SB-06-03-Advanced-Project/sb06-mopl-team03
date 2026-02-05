@@ -9,8 +9,8 @@ import org.codeit.sb06.team03.mopl.account.application.out.SaveAccountPort;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
 import org.codeit.sb06.team03.mopl.account.domain.AccountService;
 import org.codeit.sb06.team03.mopl.account.domain.exception.AccountRegistrationFailedException;
-import org.codeit.sb06.team03.mopl.account.domain.exception.EmailAlreadyExistsException;
-import org.codeit.sb06.team03.mopl.account.domain.vo.Email;
+import org.codeit.sb06.team03.mopl.account.domain.exception.EmailAddressAlreadyExistsException;
+import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,13 +28,13 @@ public class AccountAppService implements RegisterAccountUseCase {
     @Transactional
     public Account register(RegisterAccountCommand command) {
         final String name = command.name();
-        final Email email = command.email();
+        final EmailAddress emailAddress = command.emailAddress();
         final String rawPassword = command.rawPassword();
 
-        if (loadAccountPort.existsByEmail(email)) {
-            throw new EmailAlreadyExistsException(email.value());
+        if (loadAccountPort.existsByEmailAddress(emailAddress)) {
+            throw new EmailAddressAlreadyExistsException(emailAddress.value());
         }
-        Account newAccount = accountService.create(email, rawPassword);
+        Account newAccount = accountService.create(emailAddress, rawPassword);
         createUserPort.create(name)
                 .exceptionally(throwable -> {
                     throw new AccountRegistrationFailedException(throwable);

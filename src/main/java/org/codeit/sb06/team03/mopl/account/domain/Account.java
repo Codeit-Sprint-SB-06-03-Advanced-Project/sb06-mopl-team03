@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.codeit.sb06.team03.mopl.account.domain.vo.Email;
+import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
@@ -35,14 +35,14 @@ public class Account extends AbstractAggregateRoot<Account> {
     private short version;
 
     @Embedded
-    private Email email;
+    private EmailAddress emailAddress;
 
     @Embedded
     private Password password;
 
-    public static Account create(Email email, Password password) {
+    public static Account create(EmailAddress emailAddress, Password password) {
         var account = new Account();
-        account.email = email;
+        account.emailAddress = emailAddress;
         account.password = password;
         account.registerEvent(new AccountRegisteredEvent());
         return account;
