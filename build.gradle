@@ -4,9 +4,9 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.7'
 }
 ext {
-    springdocVersion = "2.8.15"
-    querydslVersion = "7.1"
-    springCloudVersion = "2025.0.1"
+    springdocVersion = '2.8.15'
+    querydslVersion = '7.1'
+    springCloudVersion = '2025.0.1'
 }
 
 group = 'org.codeit.sb06.team03'
@@ -29,22 +29,27 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion"
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-    implementation "io.github.openfeign.querydsl:querydsl-jpa-spring:${querydslVersion}"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
     compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation "io.github.openfeign.querydsl:querydsl-jpa-spring:${querydslVersion}"
     annotationProcessor "io.github.openfeign.querydsl:querydsl-apt:${querydslVersion}:jakarta"
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
