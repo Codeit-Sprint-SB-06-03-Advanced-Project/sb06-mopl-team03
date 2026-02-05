@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "사용자 관리")
@@ -16,4 +17,11 @@ public interface UserApi {
     @ApiResponse(responseCode = "401", description = "인증 오류")
     @ApiResponse(responseCode = "500", description = "서버 오류")
     ResponseEntity<UserDto> postUsers(@RequestBody(required = true) @Valid UserCreateRequest request);
+
+    @Operation(summary = "사용자 비밀번호 수정")
+    @ApiResponse(responseCode = "201", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    @ApiResponse(responseCode = "401", description = "인증 오류")
+    @ApiResponse(responseCode = "500", description = "서버 오류")
+    ResponseEntity<Void> updatePassword(@RequestBody(required = true) @Valid PasswordUpdateRequest request);
 }
