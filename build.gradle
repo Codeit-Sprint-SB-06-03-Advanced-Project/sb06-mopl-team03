@@ -5,6 +5,7 @@ plugins {
 }
 ext {
     springdocVersion = "2.8.15"
+    querydslVersion = "7.1"
     springCloudVersion = "2025.0.1"
 }
 
@@ -30,11 +31,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion"
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+    implementation "io.github.openfeign.querydsl:querydsl-jpa-spring:${querydslVersion}"
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "io.github.openfeign.querydsl:querydsl-apt:${querydslVersion}:jakarta"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.batch:spring-batch-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
