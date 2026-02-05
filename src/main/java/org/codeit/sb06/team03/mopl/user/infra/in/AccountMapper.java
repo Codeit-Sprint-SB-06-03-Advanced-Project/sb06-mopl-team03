@@ -9,8 +9,8 @@ public class AccountMapper {
 
     public RegisterAccountCommand toCommand(UserCreateRequest request) {
         final String name = request.name();
-        final EmailAddress email = new EmailAddress(request.email());
+        final EmailAddress emailAddress = new EmailAddress(request.email());
         final String rawPassword = request.password();
-        return new RegisterAccountCommand(name, email, rawPassword);
+        return new RegisterAccountCommand(name, emailAddress, rawPassword);
     }
 }
