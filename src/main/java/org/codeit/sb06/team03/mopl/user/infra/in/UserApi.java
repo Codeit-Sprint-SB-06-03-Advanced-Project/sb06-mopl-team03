@@ -7,6 +7,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.UUID;
 
 @Tag(name = "사용자 관리")
 public interface UserApi {
@@ -23,5 +26,9 @@ public interface UserApi {
     @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @ApiResponse(responseCode = "401", description = "인증 오류")
     @ApiResponse(responseCode = "500", description = "서버 오류")
-    ResponseEntity<Void> updatePassword(@RequestBody(required = true) @Valid PasswordUpdateRequest request);
+    ResponseEntity<Void> updatePassword(
+            @PathVariable UUID userId,
+            @RequestBody(required = true) @Valid PasswordUpdateRequest request
+    );
+
 }
