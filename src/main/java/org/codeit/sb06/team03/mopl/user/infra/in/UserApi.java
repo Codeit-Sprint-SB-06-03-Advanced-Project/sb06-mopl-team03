@@ -27,7 +27,7 @@ public interface UserApi {
     @ApiResponse(responseCode = "401", description = "인증 오류")
     @ApiResponse(responseCode = "500", description = "서버 오류")
     ResponseEntity<Void> updatePassword(
-            @PathVariable UUID userId,
+            @PathVariable String userId,
             @RequestBody(required = true) @Valid PasswordUpdateRequest request
     );
 

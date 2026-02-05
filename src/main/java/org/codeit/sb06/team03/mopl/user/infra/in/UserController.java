@@ -1,6 +1,7 @@
 package org.codeit.sb06.team03.mopl.user.infra.in;
 
 import lombok.RequiredArgsConstructor;
+import org.codeit.sb06.team03.mopl.account.application.AccountAppService;
 import org.codeit.sb06.team03.mopl.account.domain.AccountService;
 import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
 import org.codeit.sb06.team03.mopl.bff.BffUserService;
@@ -16,7 +17,7 @@ import java.util.UUID;
 public class UserController implements UserApi {
 
     private final BffUserService bffUserService;
-    private final AccountService accountService;
+    private final AccountAppService accountAppService;
 
     @Override
     @PostMapping
@@ -27,8 +28,8 @@ public class UserController implements UserApi {
 
     @Override
     @PatchMapping("/{userId}/password")
-    public ResponseEntity<Void> updatePassword(@PathVariable UUID userId, @RequestBody PasswordUpdateRequest request){
-        accountService.updatePassword();
+    public ResponseEntity<Void> updatePassword(@PathVariable String userId, @RequestBody PasswordUpdateRequest request){
+        accountAppService.updatePassword(request.toCommand(userId, request)); // TODO BFF?
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

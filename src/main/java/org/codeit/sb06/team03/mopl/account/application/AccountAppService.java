@@ -30,7 +30,6 @@ public class AccountAppService implements RegisterAccountUseCase, UpdatePassword
     private final LoadAccountPort loadAccountPort;
     private final CreateUserPort createUserPort;
     private final SaveAccountPort saveAccountPort;
-    private final PasswordEncryptionPolicy passwordEncryptionPolicy;
 
     @Override
     @Transactional
@@ -55,16 +54,14 @@ public class AccountAppService implements RegisterAccountUseCase, UpdatePassword
 
     @Override
     @Transactional
-    public void updatePassword(String accountId, UpdatePasswordCommand command) {
-
-        // TODO AccountService로 분리
+    public void updatePassword(UpdatePasswordCommand command) {
 
         // 불러오기
-        UUID accountUUID = parseUUID(accountId);
+        final UUID accountUUID = parseUUID(command.accountId());
         Account account = loadAccountPort.findByAccountId(accountUUID)
                 .orElseThrow(() -> new RuntimeException("")); // TODO 커스텀예외
 
-        PasswordReset passwordReset = loadPasswordResetPort.findByAccountId(accountId)
+        PasswordReset passwordReset = loadPasswordResetPort.findByAccountId(accountUUID)
                 .orElseThrow(() -> new RuntimeException(""));
 
         // 임시 비밀번호 검증
@@ -75,8 +72,8 @@ public class AccountAppService implements RegisterAccountUseCase, UpdatePassword
         }
 
         // 새 비밀번호로 변경
-        Password password = passwordEncryptionPolicy.apply(command.newPassword());
-        accountService.updatePassword(password);
+        accountService.updatePassword(account, command.newPassword());
+
         saveAccountPort.save(account);
 
         // 임시 비밀번호 삭제
