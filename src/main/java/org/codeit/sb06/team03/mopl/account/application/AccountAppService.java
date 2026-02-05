@@ -35,7 +35,7 @@ public class AccountAppService implements RegisterAccountUseCase {
             throw new EmailAddressAlreadyExistsException(emailAddress.value());
         }
         Account newAccount = accountService.create(emailAddress, rawPassword);
-        createUserPort.create(newAccount.getId(), name)
+        createUserPort.create(name)
                 .exceptionally(throwable -> {
                     throw new AccountRegistrationFailedException(throwable);
                 })
