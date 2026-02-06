@@ -1,11 +1,9 @@
 package org.codeit.sb06.team03.mopl.bff;
 
 import lombok.RequiredArgsConstructor;
-import org.codeit.sb06.team03.mopl.account.application.in.RegisterAccountCommand;
-import org.codeit.sb06.team03.mopl.account.application.in.RegisterAccountUseCase;
-import org.codeit.sb06.team03.mopl.account.application.in.AssignRoleUseCase;
-import org.codeit.sb06.team03.mopl.account.application.in.AssignRoleCommand;
+import org.codeit.sb06.team03.mopl.account.application.in.*;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
+import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
 import org.codeit.sb06.team03.mopl.user.infra.in.AccountMapper;
 import org.codeit.sb06.team03.mopl.user.infra.in.UserCreateRequest;
 import org.codeit.sb06.team03.mopl.user.infra.in.UserDto;
@@ -22,6 +20,7 @@ public class BasicBffUserService implements BffUserService {
     private final AccountMapper accountMapper;
     private final RegisterAccountUseCase registerAccountUseCase;
     private final AssignRoleUseCase assignRoleUseCase;
+    private final UpdatePasswordUseCase updatePasswordUseCase;
 
     @Override
     public UserDto registerAccount(UserCreateRequest request) {
@@ -37,6 +36,13 @@ public class BasicBffUserService implements BffUserService {
         Boolean locked = null; // TODO
         return new UserDto(id, createdAt, emailAddress, name, profileImageUrl, role, locked); // TODO
     }
+
+    @Override
+    public void updatePassword(String userId, PasswordUpdateRequest request) {
+        UpdatePasswordCommand command = accountMapper.toCommand(request);
+        updatePasswordUseCase.updatePassword(userId, command);
+    }
+
 
     @Override
     public void assignUserRole(String userId, UserRoleUpdateRequest request) {

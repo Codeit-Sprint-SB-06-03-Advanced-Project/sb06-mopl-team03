@@ -57,11 +57,11 @@ public class AccountAppService implements RegisterAccountUseCase, UpdatePassword
 
     @Override
     @Transactional
-    public void updatePassword(UpdatePasswordCommand command) {
+    public void updatePassword(String accountId, UpdatePasswordCommand command) {
 
         // 불러오기
-        final UUID accountUUID = parseUUID(command.accountId());
-        Account account = loadAccountPort.findByAccountId(accountUUID)
+        final UUID accountUUID = parseUUID(accountId);
+        Account account = loadAccountPort.findById(accountUUID)
                 .orElseThrow(() -> new AccountNotFoundException(accountUUID));
 
         // 새 비밀번호로 변경

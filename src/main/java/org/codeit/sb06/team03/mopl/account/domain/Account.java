@@ -67,7 +67,7 @@ public class Account extends AbstractAggregateRoot<Account> {
         return account;
     }
 
-    public void updatePassword(Password newPassword){
+    public void updatePassword(Password newPassword) {
         this.password = newPassword;
     }
 

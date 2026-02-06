@@ -13,7 +13,5 @@ public record PasswordUpdateRequest(
         String newPassword
 
 ) {
-    public UpdatePasswordCommand toCommand(String accountId, PasswordUpdateRequest request) { // TODO 매퍼로 분리?
-        return new UpdatePasswordCommand(accountId, request.newPassword);
-    }
+
 }
