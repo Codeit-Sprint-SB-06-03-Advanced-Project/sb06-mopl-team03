@@ -16,8 +16,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.codeit.sb06.team03.mopl.account.domain.event.AccountEvent.AccountRegisteredEvent;
-import static org.codeit.sb06.team03.mopl.account.domain.event.AccountEvent.RoleUpdatedEvent;
+import static org.codeit.sb06.team03.mopl.account.domain.event.AccountEvent.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -75,6 +74,14 @@ public class Account extends AbstractAggregateRoot<Account> {
         if (this.role != role) {
             this.role = role;
             this.registerEvent(new RoleUpdatedEvent(role));
+        }
+        return this;
+    }
+
+    public Account updateLocked(boolean locked) {
+        if (this.locked != locked) {
+            this.locked = locked;
+            this.registerEvent(new AccountLockUpdatedEvent(this.id, this.locked));
         }
         return this;
     }
