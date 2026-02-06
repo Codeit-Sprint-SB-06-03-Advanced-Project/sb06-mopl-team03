@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
+import org.hibernate.validator.constraints.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,4 +46,12 @@ public interface UserApi {
     @ApiResponse(responseCode = "403", description = "권한 오류")
     @ApiResponse(responseCode = "500", description = "서버 오류")
     ResponseEntity<CursorResponseUserDto> getUsers(@ParameterObject @Valid CursorRequestUserDto request);
+
+    @Operation(summary = "사용자 상세 조회")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    @ApiResponse(responseCode = "401", description = "인증 오류")
+    @ApiResponse(responseCode = "404", description = "해당 리소스 없음")
+    @ApiResponse(responseCode = "500", description = "서버 오류")
+    ResponseEntity<UserDto> getUsersById(@UUID String userId);
 }

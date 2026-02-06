@@ -44,4 +44,11 @@ public class UserController implements UserApi {
         CursorResponseUserDto response = bffUserService.getUsers(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @Override
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getUsersById(@PathVariable String userId) {
+        UserDto response = bffUserService.getUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
