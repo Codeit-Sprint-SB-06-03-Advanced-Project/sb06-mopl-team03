@@ -14,6 +14,7 @@ import org.springframework.lang.Nullable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.codeit.sb06.team03.mopl.account.domain.QAccount.account;
@@ -200,5 +201,15 @@ public interface AccountRepository extends QuerydslJpaRepository<Account, UUID> 
                 .fetchOne();
 
         return count == null ? 0 : count;
+    }
+
+    default Optional<UserDto> findById(String accountId) {
+        final UUID accountIdUuid = UUID.fromString(accountId);
+        UserDto userDto = select(accountDtoProjection())
+                .from(account)
+                .where(account.id.eq(accountIdUuid))
+                .fetchFirst();
+
+        return Optional.ofNullable(userDto);
     }
 }

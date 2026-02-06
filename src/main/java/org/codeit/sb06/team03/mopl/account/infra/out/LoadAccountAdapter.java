@@ -37,4 +37,9 @@ public class LoadAccountAdapter implements LoadAccountPort {
     public Long count(CursorRequestUserDto query) {
         return repository.count(query);
     }
+
+    @Override
+    public Optional<UserDto> findById(String accountId) {
+        return repository.findById(accountId);
+    }
 }

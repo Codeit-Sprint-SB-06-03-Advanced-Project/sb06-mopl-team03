@@ -18,4 +18,6 @@ public interface LoadAccountPort {
     List<UserDto> findAll(CursorRequestUserDto query);
 
     Long count(CursorRequestUserDto query);
+
+    Optional<UserDto> findById(String accountId);
 }
