@@ -2,7 +2,7 @@ package org.codeit.sb06.team03.mopl.account.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.domain.policy.PasswordEncryptionPolicy;
-import org.codeit.sb06.team03.mopl.account.domain.policy.TempPasswordExpiresPolicy;
+import org.codeit.sb06.team03.mopl.account.domain.policy.TempPasswordResetTimeoutPolicy;
 import org.codeit.sb06.team03.mopl.account.domain.policy.TempPasswordGenerationPolicy;
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
@@ -16,7 +16,7 @@ public class AccountService {
 
     private final PasswordEncryptionPolicy passwordEncryptionPolicy;
     private final TempPasswordGenerationPolicy tempPasswordGenerationPolicy;
-    private final TempPasswordExpiresPolicy tempPasswordExpiresPolicy;
+    private final TempPasswordResetTimeoutPolicy tempPasswordExpiresPolicy;
 
     public Account create(EmailAddress emailAddress, String rawPassword) {
         Password password = passwordEncryptionPolicy.apply(rawPassword);
