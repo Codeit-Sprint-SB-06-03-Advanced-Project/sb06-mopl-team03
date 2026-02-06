@@ -96,11 +96,11 @@ public class AccountAppService implements RegisterAccountUseCase, UpdatePassword
     }
 
     @Override
+    @Transactional
     public void updateLocked(String userId, UpdateLockStatusCommand command) {
-        String accountId = userId;
-        UUID accountUuid = parseUUID(accountId);
-
-        boolean locked = command.locked();
+        final String accountId = userId;
+        final UUID accountUuid = parseUUID(accountId);
+        final boolean locked = command.locked();
 
         Account foundAccount = loadAccountPort.findById(accountUuid)
                 .orElseThrow(() -> new AccountNotFoundException(accountUuid));
