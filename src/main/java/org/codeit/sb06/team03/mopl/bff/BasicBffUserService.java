@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.application.in.*;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
 import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
-import org.codeit.sb06.team03.mopl.user.infra.in.AccountMapper;
-import org.codeit.sb06.team03.mopl.user.infra.in.UserCreateRequest;
-import org.codeit.sb06.team03.mopl.user.infra.in.UserDto;
-import org.codeit.sb06.team03.mopl.user.infra.in.UserRoleUpdateRequest;
+import org.codeit.sb06.team03.mopl.user.infra.in.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -21,6 +18,7 @@ public class BasicBffUserService implements BffUserService {
     private final RegisterAccountUseCase registerAccountUseCase;
     private final AssignRoleUseCase assignRoleUseCase;
     private final UpdatePasswordUseCase updatePasswordUseCase;
+    private final GetAccountUseCase getAccountUseCase;
 
     @Override
     public UserDto registerAccount(UserCreateRequest request) {
@@ -48,5 +46,10 @@ public class BasicBffUserService implements BffUserService {
     public void assignUserRole(String userId, UserRoleUpdateRequest request) {
         AssignRoleCommand command = accountMapper.toCommand(request);
         assignRoleUseCase.assignRole(userId, command);
+    }
+
+    @Override
+    public CursorResponseUserDto getUsers(CursorRequestUserDto request) {
+        return getAccountUseCase.get(request);
     }
 }
