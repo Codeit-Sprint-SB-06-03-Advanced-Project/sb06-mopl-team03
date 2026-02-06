@@ -74,7 +74,7 @@ public class AccountAppService implements RegisterAccountUseCase, UpdatePassword
             throw new InvalidRoleException(command.role());
         }
 
-        Role role = Role.valueOf(command.role());
+        final Role role = Role.valueOf(command.role());
 
         Account foundAccount = loadAccountPort.findById(accountUuid)
                 .orElseThrow(() -> new AccountNotFoundException(accountUuid));
