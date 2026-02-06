@@ -18,7 +18,7 @@ public class UserController implements UserApi {
     @PostMapping
     public ResponseEntity<UserDto> postUsers(@RequestBody UserCreateRequest request) {
         UserDto response = bffUserService.registerAccount(request);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Override
