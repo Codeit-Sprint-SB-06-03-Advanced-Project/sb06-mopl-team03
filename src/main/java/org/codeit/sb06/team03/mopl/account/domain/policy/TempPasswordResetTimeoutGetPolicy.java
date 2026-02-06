@@ -8,7 +8,7 @@ import java.time.Instant;
 
 @RequiredArgsConstructor
 @Component
-@ConditionalOnProperty(name = "mopl.account.temp-password-timeout-policy", havingValue = "get")
+@ConditionalOnProperty(name = "mopl.account.temp-password-reset-timeout-policy", havingValue = "get")
 public class TempPasswordResetTimeoutGetPolicy implements TempPasswordResetTimeoutPolicy {
     /**
      * @return : Instant(3min)
