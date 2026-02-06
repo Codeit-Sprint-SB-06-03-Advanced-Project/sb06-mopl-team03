@@ -1,10 +1,7 @@
 package org.codeit.sb06.team03.mopl.user.infra.in;
 
 import lombok.extern.slf4j.Slf4j;
-import org.codeit.sb06.team03.mopl.account.domain.exception.AccountRegistrationFailedException;
-import org.codeit.sb06.team03.mopl.account.domain.exception.EmailAddressAlreadyExistsException;
-import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidEmailAddressException;
-import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidPasswordException;
+import org.codeit.sb06.team03.mopl.account.domain.exception.*;
 import org.codeit.sb06.team03.mopl.common.error.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,5 +64,38 @@ public class UserControllerAdvice {
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidAccountIdFormatException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidAccountIdFormatException(InvalidAccountIdFormatException e) {
+        log.error(e.getMessage());
+        var errorResponse = new ErrorResponse(
+                e.getClass().getSimpleName(),
+                "UUID 형식이 일치하지 않습니다.",
+                Collections.emptyList()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidRoleException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidRoleException(InvalidRoleException e) {
+        log.error(e.getMessage());
+        var errorResponse = new ErrorResponse(
+                e.getClass().getSimpleName(),
+                "존재하지 않는 Role 입니다.",
+                Collections.emptyList()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleAccountNotFoundException(AccountNotFoundException e) {
+        log.error(e.getMessage());
+        var errorResponse = new ErrorResponse(
+                e.getClass().getSimpleName(),
+                "Account를 찾을 수 없습니다.",
+                Collections.emptyList()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 }
