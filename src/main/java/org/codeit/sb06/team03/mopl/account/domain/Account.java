@@ -75,9 +75,9 @@ public class Account extends AbstractAggregateRoot<Account> {
         return this;
     }
 
-    public Account passwordReset(Password tempPassword, Instant expiresAt) {
+    public Account passwordReset(Password tempPassword, Instant expiresAt, String rawTempPassword) {
         this.passwordReset = PasswordReset.create(this, tempPassword);
-        this.registerEvent(new PasswordResetedEvent(emailAddress, tempPassword, expiresAt));
+        this.registerEvent(new PasswordResetedEvent(emailAddress, rawTempPassword, expiresAt));
         return this;
     }
 }

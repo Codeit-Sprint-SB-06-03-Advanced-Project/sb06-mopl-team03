@@ -26,7 +26,7 @@ public class TempPasswordRandomGenerationPolicy implements TempPasswordGeneratio
     private final PasswordEncryptionPolicy encryptionPolicy;
 
     @Override
-    public Password generate() {
+    public TempPasswordGenerationResult generate() {
         /*
           Security는 .. ? 자동 생성
            -> 이유는 보안적인 사항은 개별적으로 개발하는 것이 아닌 security에서 생성하는대로 사용하는 것.
@@ -45,7 +45,8 @@ public class TempPasswordRandomGenerationPolicy implements TempPasswordGeneratio
         }
 
         Collections.shuffle(passwordChars);*/
-
-        return encryptionPolicy.apply("temporary1!!");
+        final String rawPassword = "temporary1!!";
+        Password encrypted = encryptionPolicy.apply(rawPassword);
+        return new TempPasswordGenerationResult(encrypted, rawPassword);
     }
 }

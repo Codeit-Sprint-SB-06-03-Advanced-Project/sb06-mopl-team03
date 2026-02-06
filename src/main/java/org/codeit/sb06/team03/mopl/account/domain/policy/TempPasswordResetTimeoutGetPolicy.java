@@ -14,7 +14,7 @@ public class TempPasswordResetTimeoutGetPolicy implements TempPasswordResetTimeo
      * @return : Instant(3min)
      */
     @Override
-    public Instant getExpiresAt() {
+    public Instant get() {
         return Instant.now().plusSeconds(60 * 3);
     }
 }

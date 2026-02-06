@@ -4,5 +4,8 @@ import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
 
 public interface TempPasswordGenerationPolicy {
 
-    Password generate();
+    TempPasswordGenerationResult generate();
+
+    record TempPasswordGenerationResult(Password password, String rawPassword) {
+    }
 }

@@ -62,9 +62,8 @@ public class AccountAppService implements RegisterAccountUseCase, ResetPasswordU
         Account existAccount = loadAccountPort.findByEmailAddress(emailAddress);
 
         Account resetPasswordAccount = accountService.resetPassword(existAccount);
-        // TODO : 이벤트 등록 ResetPasswordEvent
 
-        saveAccountPort.save(resetPasswordAccount); // TODO : 이벤트 발행
+        saveAccountPort.save(resetPasswordAccount);
         return resetPasswordAccount;
     }
 

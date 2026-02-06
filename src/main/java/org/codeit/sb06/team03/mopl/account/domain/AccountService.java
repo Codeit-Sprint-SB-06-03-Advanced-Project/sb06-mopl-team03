@@ -16,7 +16,7 @@ public class AccountService {
 
     private final PasswordEncryptionPolicy passwordEncryptionPolicy;
     private final TempPasswordGenerationPolicy tempPasswordGenerationPolicy;
-    private final TempPasswordResetTimeoutPolicy tempPasswordExpiresPolicy;
+    private final TempPasswordResetTimeoutPolicy tempPasswordResetTimeoutPolicy;
 
     public Account create(EmailAddress emailAddress, String rawPassword) {
         Password password = passwordEncryptionPolicy.apply(rawPassword);
@@ -28,8 +28,9 @@ public class AccountService {
     }
 
     public Account resetPassword(Account account) {
-        Password tempPassword = tempPasswordGenerationPolicy.generate();
-        Instant expriesAt = tempPasswordExpiresPolicy.getExpiresAt();
-        return account.passwordReset(tempPassword, expriesAt);
+        Password tempPassword = tempPasswordGenerationPolicy.generate().password();
+        String rawTempPassword = tempPasswordGenerationPolicy.generate().rawPassword();
+        Instant expiresAt = tempPasswordResetTimeoutPolicy.get();
+        return account.passwordReset(tempPassword, expiresAt, rawTempPassword);
     }
 }
