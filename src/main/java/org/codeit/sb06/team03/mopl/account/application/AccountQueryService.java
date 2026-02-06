@@ -3,6 +3,7 @@ package org.codeit.sb06.team03.mopl.account.application;
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.application.in.GetAccountUseCase;
 import org.codeit.sb06.team03.mopl.account.application.out.LoadAccountPort;
+import org.codeit.sb06.team03.mopl.account.domain.exception.AccountNotFoundException;
 import org.codeit.sb06.team03.mopl.user.infra.in.CursorRequestUserDto;
 import org.codeit.sb06.team03.mopl.user.infra.in.CursorResponseUserDto;
 import org.codeit.sb06.team03.mopl.user.infra.in.UserDto;
@@ -84,5 +85,11 @@ public class AccountQueryService implements GetAccountUseCase {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
+    }
+
+    @Override
+    public UserDto get(String accountId) {
+        return loadAccountPort.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException(accountId));
     }
 }
