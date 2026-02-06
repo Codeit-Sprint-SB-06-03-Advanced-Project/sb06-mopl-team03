@@ -11,8 +11,7 @@ import org.codeit.sb06.team03.mopl.account.domain.Account;
 import org.codeit.sb06.team03.mopl.account.domain.AccountService;
 import org.codeit.sb06.team03.mopl.account.domain.PasswordResetService;
 import org.codeit.sb06.team03.mopl.account.domain.entity.PasswordReset;
-import org.codeit.sb06.team03.mopl.account.domain.exception.AccountRegistrationFailedException;
-import org.codeit.sb06.team03.mopl.account.domain.exception.EmailAddressAlreadyExistsException;
+import org.codeit.sb06.team03.mopl.account.domain.exception.*;
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,9 +60,9 @@ public class AccountAppService implements RegisterAccountUseCase, UpdatePassword
         // 불러오기
         final UUID accountUUID = parseUUID(command.accountId());
         Account account = loadAccountPort.findByAccountId(accountUUID)
-                .orElseThrow(() -> new RuntimeException("")); // TODO 커스텀예외
+                .orElseThrow(() -> new AccountNotFoundException(accountUUID));
         PasswordReset passwordReset = loadPasswordResetPort.findByAccountId(accountUUID)
-                .orElseThrow(() -> new RuntimeException("")); // TODO 커스텀예외
+                .orElseThrow(() -> new PasswordResetNotFound(accountUUID));
 
         // 임시 비밀번호 검증
         passwordResetService.validateTempPassword(passwordReset, command.tempPassword());
@@ -80,8 +79,7 @@ public class AccountAppService implements RegisterAccountUseCase, UpdatePassword
         try {
             return UUID.fromString(id);
         } catch (IllegalArgumentException | NullPointerException e) {
-            // 비즈니스 계층에서 이해할 수 있는 예외로 변환
-            throw new InvalidIdentifierException(""); // TODO 커스텀예외
+            throw new InvalidIdentifierException(id);
         }
     }
 }
