@@ -10,5 +10,5 @@ public interface LoadAccountPort {
 
     boolean existsByEmailAddress(EmailAddress emailAddress);
 
-    Optional<Account> findByAccountId(UUID accountId);
+    Optional<Account> findById(UUID accountId);
 }

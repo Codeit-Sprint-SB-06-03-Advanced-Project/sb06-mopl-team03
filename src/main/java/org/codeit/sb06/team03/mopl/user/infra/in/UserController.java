@@ -2,14 +2,11 @@ package org.codeit.sb06.team03.mopl.user.infra.in;
 
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.application.AccountAppService;
-import org.codeit.sb06.team03.mopl.account.domain.AccountService;
 import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
 import org.codeit.sb06.team03.mopl.bff.BffUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,5 +28,15 @@ public class UserController implements UserApi {
     public ResponseEntity<Void> updatePassword(@PathVariable String userId, @RequestBody PasswordUpdateRequest request){
         accountAppService.updatePassword(request.toCommand(userId, request)); // TODO BFF?
         return ResponseEntity.status(HttpStatus.OK).body(null);
+
+    }
+
+    @PatchMapping("/{userId}/role")
+    public ResponseEntity<Void> patchUsersRole(
+            @PathVariable(name = "userId") String userId,
+            @RequestBody UserRoleUpdateRequest request
+    ) {
+        bffUserService.assignUserRole(userId, request);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

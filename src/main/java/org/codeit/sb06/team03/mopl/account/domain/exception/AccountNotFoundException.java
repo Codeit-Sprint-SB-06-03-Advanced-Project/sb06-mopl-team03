@@ -4,8 +4,7 @@ import java.util.UUID;
 
 public class AccountNotFoundException extends AccountException {
 
-    public AccountNotFoundException(UUID id) {
-        super("Account not found: %s".formatted(id));
+    public AccountNotFoundException(UUID accountId) {
+        super(String.format("Account with id '%s' not found", accountId));
     }
-
 }

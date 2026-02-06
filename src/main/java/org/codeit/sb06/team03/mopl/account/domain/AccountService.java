@@ -1,7 +1,6 @@
 package org.codeit.sb06.team03.mopl.account.domain;
 
 import lombok.RequiredArgsConstructor;
-import org.codeit.sb06.team03.mopl.account.application.in.UpdatePasswordCommand;
 import org.codeit.sb06.team03.mopl.account.domain.policy.PasswordEncryptionPolicy;
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
@@ -21,5 +20,9 @@ public class AccountService {
     public void updatePassword(Account account, String newPassword) {
         Password password = passwordEncryptionPolicy.apply(newPassword);
         account.updatePassword(password);
+    }
+
+    public Account updateRole(Account account, Role role) {
+        return account.updateRole(role);
     }
 }

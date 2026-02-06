@@ -21,7 +21,7 @@ public class LoadAccountAdapter implements LoadAccountPort {
     }
 
     @Override
-    public Optional<Account> findByAccountId(UUID accountId){
+    public Optional<Account> findById(UUID accountId) {
         return repository.findById(accountId);
     }
 }
