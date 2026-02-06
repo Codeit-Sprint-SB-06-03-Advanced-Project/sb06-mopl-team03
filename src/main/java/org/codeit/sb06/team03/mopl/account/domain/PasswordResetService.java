@@ -16,7 +16,7 @@ public class PasswordResetService {
         Password encryptedInput = passwordEncryptionPolicy.apply(tempPassword);
 
         if (!passwordReset.validateTempPassword(encryptedInput)) {
-            throw new RuntimeException(); // TODO 커스텀예외
+            throw new RuntimeException();
         }
     }
 
