@@ -51,7 +51,7 @@ public class BasicBffUserService implements BffUserService {
     }
 
     @Override
-    public void updateUserLockStatus(String userId, UserLockUpdateRequest request) {
+    public void updateUserLockStatus(UUID userId, UserLockUpdateRequest request) {
         UpdateLockStatusCommand command = accountMapper.toCommand(request);
         updateLockStatusUseCase.updateLocked(userId, command);
     }

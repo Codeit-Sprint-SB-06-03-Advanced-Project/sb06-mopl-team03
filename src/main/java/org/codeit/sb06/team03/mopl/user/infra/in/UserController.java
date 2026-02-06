@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
@@ -45,7 +47,8 @@ public class UserController implements UserApi {
             @PathVariable(name = "userId") String userId,
             @RequestBody UserLockUpdateRequest request
     ) {
-        bffUserService.updateUserLockStatus(userId, request);
+        UUID userUuid = UUID.fromString(userId);
+        bffUserService.updateUserLockStatus(userUuid, request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

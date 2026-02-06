@@ -1,6 +1,8 @@
 package org.codeit.sb06.team03.mopl.account.application.in;
 
+import java.util.UUID;
+
 public interface UpdateLockStatusUseCase {
 
-    void updateLocked(String userId, UpdateLockStatusCommand command);
+    void updateLocked(UUID userId, UpdateLockStatusCommand command);
 }

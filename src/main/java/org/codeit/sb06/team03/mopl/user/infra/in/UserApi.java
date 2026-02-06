@@ -44,7 +44,10 @@ public interface UserApi {
     @ApiResponse(responseCode = "401", description = "인증 오류")
     @ApiResponse(responseCode = "403", description = "권한 오류")
     @ApiResponse(responseCode = "500", description = "서버 오류")
-    ResponseEntity<Void> patchUsersLockStatus(String userId, @RequestBody(required = true) UserLockUpdateRequest request);
+    ResponseEntity<Void> patchUsersLockStatus(
+            @UUID(message = "잘못된 UUID 형식입니다.") String userId,
+            @RequestBody(required = true) UserLockUpdateRequest request
+    );
 
     @Operation(summary = "[어드민] 사용자 목록 조회 (커서 페이지네이션)")
     @ApiResponse(responseCode = "200", description = "성공")
