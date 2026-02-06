@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.codeit.sb06.team03.mopl.account.application.in.UpdatePasswordCommand;
 import org.codeit.sb06.team03.mopl.account.domain.entity.PasswordReset;
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
@@ -64,6 +65,10 @@ public class Account extends AbstractAggregateRoot<Account> {
         account.locked = false;
         account.registerEvent(new AccountRegisteredEvent());
         return account;
+    }
+
+    public void updatePassword(Password newPassword) {
+        this.password = newPassword;
     }
 
     public Account updateRole(Role role) {

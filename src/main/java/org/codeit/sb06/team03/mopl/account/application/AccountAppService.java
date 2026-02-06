@@ -3,11 +3,15 @@ package org.codeit.sb06.team03.mopl.account.application;
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.application.in.AssignRoleCommand;
 import org.codeit.sb06.team03.mopl.account.application.in.AssignRoleUseCase;
+import lombok.extern.slf4j.Slf4j;
 import org.codeit.sb06.team03.mopl.account.application.in.RegisterAccountCommand;
 import org.codeit.sb06.team03.mopl.account.application.in.RegisterAccountUseCase;
 import org.codeit.sb06.team03.mopl.account.application.out.CreateUserPort;
 import org.codeit.sb06.team03.mopl.account.application.out.LoadAccountPort;
 import org.codeit.sb06.team03.mopl.account.application.out.SaveAccountPort;
+import org.codeit.sb06.team03.mopl.account.application.in.UpdatePasswordCommand;
+import org.codeit.sb06.team03.mopl.account.application.in.UpdatePasswordUseCase;
+import org.codeit.sb06.team03.mopl.account.application.out.*;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
 import org.codeit.sb06.team03.mopl.account.domain.AccountService;
 import org.codeit.sb06.team03.mopl.account.domain.Role;
@@ -21,12 +25,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class AccountAppService implements RegisterAccountUseCase, AssignRoleUseCase {
+@Slf4j
+public class AccountAppService implements RegisterAccountUseCase, UpdatePasswordUseCase, AssignRoleUseCase {
 
     private final AccountService accountService;
     private final LoadAccountPort loadAccountPort;
     private final CreateUserPort createUserPort;
     private final SaveAccountPort saveAccountPort;
+    private final DeletePasswordResetPort deletePasswordResetPort;
 
     @Override
     @Transactional
@@ -47,6 +53,23 @@ public class AccountAppService implements RegisterAccountUseCase, AssignRoleUseC
 
         saveAccountPort.save(newAccount);
         return newAccount;
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(String accountId, UpdatePasswordCommand command) {
+
+        // 불러오기
+        final UUID accountUUID = parseUUID(accountId);
+        Account account = loadAccountPort.findById(accountUUID)
+                .orElseThrow(() -> new AccountNotFoundException(accountUUID));
+
+        // 새 비밀번호로 변경
+        accountService.updatePassword(account, command.newPassword());
+
+        // 저장, 임시 비밀번호 삭제
+        saveAccountPort.save(account);
+        deletePasswordResetPort.deleteByAccountId(accountUUID);
     }
 
     @Override
@@ -75,8 +98,8 @@ public class AccountAppService implements RegisterAccountUseCase, AssignRoleUseC
     private UUID parseUUID(String id) {
         try {
             return UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidAccountIdFormatException(id);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new InvalidIdentifierException(id);
         }
     }
 }
