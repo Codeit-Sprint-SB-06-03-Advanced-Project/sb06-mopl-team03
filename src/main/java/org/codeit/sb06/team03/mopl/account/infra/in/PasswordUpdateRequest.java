@@ -7,10 +7,6 @@ import org.hibernate.validator.constraints.Length;
 
 public record PasswordUpdateRequest(
 
-        @Schema(description = "임시 비밀먼호")
-        @NotBlank
-        String tempPassword,
-
         @Schema(description = "새 비밀번호")
         @NotBlank
         @Length(min = 8)
@@ -18,6 +14,6 @@ public record PasswordUpdateRequest(
 
 ) {
     public UpdatePasswordCommand toCommand(String accountId, PasswordUpdateRequest request) { // TODO 매퍼로 분리?
-        return new UpdatePasswordCommand(accountId, request.tempPassword, request.newPassword);
+        return new UpdatePasswordCommand(accountId, request.newPassword);
     }
 }

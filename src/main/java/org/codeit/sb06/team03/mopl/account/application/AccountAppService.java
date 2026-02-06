@@ -61,11 +61,11 @@ public class AccountAppService implements RegisterAccountUseCase, UpdatePassword
         final UUID accountUUID = parseUUID(command.accountId());
         Account account = loadAccountPort.findByAccountId(accountUUID)
                 .orElseThrow(() -> new AccountNotFoundException(accountUUID));
-        PasswordReset passwordReset = loadPasswordResetPort.findByAccountId(accountUUID)
-                .orElseThrow(() -> new PasswordResetNotFound(accountUUID));
-
-        // 임시 비밀번호 검증
-        passwordResetService.validateTempPassword(passwordReset, command.tempPassword());
+//        PasswordReset passwordReset = loadPasswordResetPort.findByAccountId(accountUUID)
+//                .orElseThrow(() -> new PasswordResetNotFound(accountUUID));
+//
+//        // 임시 비밀번호 검증
+//        passwordResetService.validateTempPassword(passwordReset, command.tempPassword());
 
         // 새 비밀번호로 변경
         accountService.updatePassword(account, command.newPassword());
