@@ -29,12 +29,23 @@ public class UserController implements UserApi {
 
     }
 
+    @Override
     @PatchMapping("/{userId}/role")
     public ResponseEntity<Void> patchUsersRole(
             @PathVariable(name = "userId") String userId,
             @RequestBody UserRoleUpdateRequest request
     ) {
         bffUserService.assignUserRole(userId, request);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @Override
+    @PatchMapping("/{userId}/locked")
+    public ResponseEntity<Void> patchUsersLockStatus(
+            @PathVariable(name = "userId") String userId,
+            @RequestBody UserLockUpdateRequest request
+    ) {
+        bffUserService.updateUserLockStatus(userId, request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

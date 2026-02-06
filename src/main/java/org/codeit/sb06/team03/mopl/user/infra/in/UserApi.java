@@ -39,6 +39,13 @@ public interface UserApi {
     @ApiResponse(responseCode = "500", description = "서버 오류")
     ResponseEntity<Void> patchUsersRole(String userId, @RequestBody(required = true) @Valid UserRoleUpdateRequest request);
 
+    @Operation(summary = "[어드민] 계정 잠금 상태 변경")
+    @ApiResponse(responseCode = "204", description = "성공")
+    @ApiResponse(responseCode = "401", description = "인증 오류")
+    @ApiResponse(responseCode = "403", description = "권한 오류")
+    @ApiResponse(responseCode = "500", description = "서버 오류")
+    ResponseEntity<Void> patchUsersLockStatus(String userId, @RequestBody(required = true) UserLockUpdateRequest request);
+
     @Operation(summary = "[어드민] 사용자 목록 조회 (커서 페이지네이션)")
     @ApiResponse(responseCode = "200", description = "성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청")
