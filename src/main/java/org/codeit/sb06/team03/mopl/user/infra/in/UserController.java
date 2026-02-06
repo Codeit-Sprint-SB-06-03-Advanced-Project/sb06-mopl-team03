@@ -37,4 +37,11 @@ public class UserController implements UserApi {
         bffUserService.assignUserRole(userId, request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @Override
+    @GetMapping
+    public ResponseEntity<CursorResponseUserDto> getUsers(@ModelAttribute CursorRequestUserDto request) {
+        CursorResponseUserDto response = bffUserService.getUsers(request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

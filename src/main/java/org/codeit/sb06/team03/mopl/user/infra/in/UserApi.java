@@ -6,10 +6,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import java.util.UUID;
 
 @Tag(name = "사용자 관리")
 public interface UserApi {
@@ -38,4 +37,12 @@ public interface UserApi {
     @ApiResponse(responseCode = "403", description = "권한 오류")
     @ApiResponse(responseCode = "500", description = "서버 오류")
     ResponseEntity<Void> patchUsersRole(String userId, @RequestBody(required = true) @Valid UserRoleUpdateRequest request);
+
+    @Operation(summary = "[어드민] 사용자 목록 조회 (커서 페이지네이션)")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    @ApiResponse(responseCode = "401", description = "인증 오류")
+    @ApiResponse(responseCode = "403", description = "권한 오류")
+    @ApiResponse(responseCode = "500", description = "서버 오류")
+    ResponseEntity<CursorResponseUserDto> getUsers(@ParameterObject @Valid CursorRequestUserDto request);
 }
