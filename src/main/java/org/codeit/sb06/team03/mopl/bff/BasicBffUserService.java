@@ -52,4 +52,9 @@ public class BasicBffUserService implements BffUserService {
     public CursorResponseUserDto getUsers(CursorRequestUserDto request) {
         return getAccountUseCase.get(request);
     }
+
+    @Override
+    public UserDto getUser(String userId) {
+        return getAccountUseCase.get(userId);
+    }
 }

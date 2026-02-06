@@ -12,4 +12,6 @@ public interface BffUserService {
     void updatePassword(String userId, PasswordUpdateRequest request);
 
     CursorResponseUserDto getUsers(CursorRequestUserDto request);
+
+    UserDto getUser(String userId);
 }
