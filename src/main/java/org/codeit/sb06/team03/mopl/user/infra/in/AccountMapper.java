@@ -2,6 +2,7 @@ package org.codeit.sb06.team03.mopl.user.infra.in;
 
 import org.codeit.sb06.team03.mopl.account.application.in.RegisterAccountCommand;
 import org.codeit.sb06.team03.mopl.account.application.in.AssignRoleCommand;
+import org.codeit.sb06.team03.mopl.account.application.in.UpdateLockStatusCommand;
 import org.codeit.sb06.team03.mopl.account.application.in.UpdatePasswordCommand;
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
@@ -25,5 +26,10 @@ public class AccountMapper {
     public AssignRoleCommand toCommand(UserRoleUpdateRequest request) {
         final String role = request.role();
         return new AssignRoleCommand(role);
+    }
+
+    public UpdateLockStatusCommand toCommand(UserLockUpdateRequest request) {
+        final boolean locked = request.locked();
+        return new UpdateLockStatusCommand(locked);
     }
 }

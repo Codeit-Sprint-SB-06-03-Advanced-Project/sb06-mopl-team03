@@ -3,6 +3,7 @@ package org.codeit.sb06.team03.mopl.bff;
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.application.in.*;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
+import org.codeit.sb06.team03.mopl.user.infra.in.*;
 import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
 import org.codeit.sb06.team03.mopl.user.infra.in.*;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class BasicBffUserService implements BffUserService {
     private final AccountMapper accountMapper;
     private final RegisterAccountUseCase registerAccountUseCase;
     private final AssignRoleUseCase assignRoleUseCase;
+    private final UpdateLockStatusUseCase updateLockStatusUseCase;
     private final UpdatePasswordUseCase updatePasswordUseCase;
     private final GetAccountUseCase getAccountUseCase;
 
@@ -46,6 +48,12 @@ public class BasicBffUserService implements BffUserService {
     public void assignUserRole(String userId, UserRoleUpdateRequest request) {
         AssignRoleCommand command = accountMapper.toCommand(request);
         assignRoleUseCase.assignRole(userId, command);
+    }
+
+    @Override
+    public void updateUserLockStatus(String userId, UserLockUpdateRequest request) {
+        UpdateLockStatusCommand command = accountMapper.toCommand(request);
+        updateLockStatusUseCase.updateLocked(userId, command);
     }
 
     @Override
