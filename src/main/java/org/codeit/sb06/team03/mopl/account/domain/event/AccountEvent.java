@@ -14,8 +14,10 @@ public abstract sealed class AccountEvent {
     public static final class AccountRegisteredEvent extends AccountEvent {
     }
 
+    @Getter
     @RequiredArgsConstructor
     public static final class RoleUpdatedEvent extends AccountEvent {
+        private final UUID accountId;
         private final Role role;
     }
 
