@@ -30,7 +30,7 @@ public class BasicBffUserService implements BffUserService {
         UUID id = newAccount.getId();
         Instant createdAt = newAccount.getCreatedAt();
         String emailAddress = newAccount.getEmailAddress().value();
-        String name = request.name();
+        String name = null; // TODO
         String profileImageUrl = null; // TODO
         String role = null; // TODO
         Boolean locked = null; // TODO
