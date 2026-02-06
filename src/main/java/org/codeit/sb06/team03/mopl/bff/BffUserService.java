@@ -13,7 +13,7 @@ public interface BffUserService {
 
     UserDto registerAccount(UserCreateRequest request);
 
-    void assignUserRole(String userId, UserRoleUpdateRequest request);
+    void assignUserRole(UUID userId, UserRoleUpdateRequest request);
 
     void updateUserLockStatus(UUID userId, UserLockUpdateRequest request);
 

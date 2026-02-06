@@ -37,7 +37,8 @@ public class UserController implements UserApi {
             @PathVariable(name = "userId") String userId,
             @RequestBody UserRoleUpdateRequest request
     ) {
-        bffUserService.assignUserRole(userId, request);
+        UUID userUuid = UUID.fromString(userId);
+        bffUserService.assignUserRole(userUuid, request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

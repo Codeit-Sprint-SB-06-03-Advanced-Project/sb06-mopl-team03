@@ -37,7 +37,10 @@ public interface UserApi {
     @ApiResponse(responseCode = "401", description = "인증 오류")
     @ApiResponse(responseCode = "403", description = "권한 오류")
     @ApiResponse(responseCode = "500", description = "서버 오류")
-    ResponseEntity<Void> patchUsersRole(String userId, @RequestBody(required = true) @Valid UserRoleUpdateRequest request);
+    ResponseEntity<Void> patchUsersRole(
+            @UUID(message = "잘못된 UUID 형식입니다.") String userId,
+            @RequestBody(required = true) UserRoleUpdateRequest request
+    );
 
     @Operation(summary = "[어드민] 계정 잠금 상태 변경")
     @ApiResponse(responseCode = "204", description = "성공")

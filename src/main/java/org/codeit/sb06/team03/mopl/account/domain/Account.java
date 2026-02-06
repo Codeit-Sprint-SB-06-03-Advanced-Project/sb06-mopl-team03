@@ -73,7 +73,7 @@ public class Account extends AbstractAggregateRoot<Account> {
     public Account updateRole(Role role) {
         if (this.role != role) {
             this.role = role;
-            this.registerEvent(new RoleUpdatedEvent(role));
+            this.registerEvent(new RoleUpdatedEvent(this.id, role));
         }
         return this;
     }
