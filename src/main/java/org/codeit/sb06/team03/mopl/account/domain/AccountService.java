@@ -28,9 +28,8 @@ public class AccountService {
     }
 
     public Account resetPassword(Account account) {
-        Password tempPassword = tempPasswordGenerationPolicy.generate().password();
-        String rawTempPassword = tempPasswordGenerationPolicy.generate().rawPassword();
+        Password tempPassword = tempPasswordGenerationPolicy.generate();
         Instant expiresAt = tempPasswordResetTimeoutPolicy.get();
-        return account.passwordReset(tempPassword, expiresAt, rawTempPassword);
+        return account.passwordReset(tempPassword, expiresAt);
     }
 }
