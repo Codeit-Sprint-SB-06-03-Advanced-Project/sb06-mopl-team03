@@ -10,7 +10,6 @@ import java.util.List;*/
 
 @RequiredArgsConstructor
 @Component
-@ConditionalOnProperty(name = "mopl.account.temp-password-policy", havingValue = "random")
 public class TempPasswordRandomGenerationPolicy implements TempPasswordGenerationPolicy{
 
     /*private static final String UPPER = "ABCDEFGHJKLMNPQRSTUVWXYZ";
