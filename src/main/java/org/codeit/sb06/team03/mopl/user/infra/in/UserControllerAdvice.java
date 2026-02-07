@@ -1,10 +1,6 @@
 package org.codeit.sb06.team03.mopl.user.infra.in;
 
 import lombok.extern.slf4j.Slf4j;
-import org.codeit.sb06.team03.mopl.account.domain.exception.AccountRegistrationFailedException;
-import org.codeit.sb06.team03.mopl.account.domain.exception.EmailAddressAlreadyExistsException;
-import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidEmailAddressException;
-import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidPasswordException;
 import org.codeit.sb06.team03.mopl.account.domain.exception.*;
 import org.codeit.sb06.team03.mopl.common.error.ErrorResponse;
 import org.springframework.http.HttpStatus;
