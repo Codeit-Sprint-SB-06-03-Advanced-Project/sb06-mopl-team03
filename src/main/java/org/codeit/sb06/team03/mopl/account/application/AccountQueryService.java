@@ -25,7 +25,7 @@ public class AccountQueryService implements GetAccountUseCase {
         final List<UserDto> userDtos = loadAccountPort.findAll(request);
         final Integer limit = request.limit();
         final List<UserDto> data = obtainData(userDtos, limit);
-        final String nextCursor = obtainNextCursor(userDtos, limit, request.sortDirection());
+        final String nextCursor = obtainNextCursor(userDtos, limit, request.sortBy());
         final String nextIdAfter = obtainNextIdAfter(userDtos, limit);
         final Boolean hasNext = obtainHasNext(userDtos, limit);
         final Long totalCount = loadAccountPort.count(request);
