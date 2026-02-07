@@ -5,7 +5,6 @@ import org.codeit.sb06.team03.mopl.account.application.in.RegisterAccountCommand
 import org.codeit.sb06.team03.mopl.account.application.in.UpdateLockStatusCommand;
 import org.codeit.sb06.team03.mopl.account.application.in.UpdatePasswordCommand;
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
-import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
 import org.springframework.stereotype.Component;
 
 @Component
