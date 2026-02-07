@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.codeit.sb06.team03.mopl.account.domain.Role;
+import org.codeit.sb06.team03.mopl.account.domain.vo.Role;
 
 import java.util.UUID;
 

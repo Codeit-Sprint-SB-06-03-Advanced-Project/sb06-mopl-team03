@@ -1,4 +1,4 @@
-package org.codeit.sb06.team03.mopl.account.domain;
+package org.codeit.sb06.team03.mopl.account.domain.vo;
 
 import java.util.Arrays;
 import java.util.Set;
