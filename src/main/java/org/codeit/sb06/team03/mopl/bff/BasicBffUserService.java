@@ -5,7 +5,6 @@ import org.codeit.sb06.team03.mopl.account.application.in.*;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
 import org.codeit.sb06.team03.mopl.user.infra.in.*;
 import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
-import org.codeit.sb06.team03.mopl.user.infra.in.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -45,7 +44,7 @@ public class BasicBffUserService implements BffUserService {
 
 
     @Override
-    public void assignUserRole(String userId, UserRoleUpdateRequest request) {
+    public void assignUserRole(UUID userId, UserRoleUpdateRequest request) {
         AssignRoleCommand command = accountMapper.toCommand(request);
         assignRoleUseCase.assignRole(userId, command);
     }
