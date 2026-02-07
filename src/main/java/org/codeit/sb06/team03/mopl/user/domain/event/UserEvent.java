@@ -11,4 +11,10 @@ public abstract sealed class UserEvent {
 
     public static final class UserProfileUpdatedEvent extends UserEvent {
     }
+
+    public static final class FollowedEvent extends UserEvent {
+    }
+
+    public static final class UnfollowedEvent extends UserEvent {
+    }
 }
