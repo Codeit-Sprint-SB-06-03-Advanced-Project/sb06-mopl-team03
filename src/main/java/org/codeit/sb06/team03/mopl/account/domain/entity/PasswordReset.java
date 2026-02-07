@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
+import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidPasswordException;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -44,6 +45,10 @@ public class PasswordReset {
     @NotNull
     @Column(name = "expires_at", nullable = false)
     private Instant expiresAt;
+
+    public boolean validateTempPassword(Password inputPassword) {
+        return this.tempPassword.equals(inputPassword);
+    }
 
     public static PasswordReset create(Account account, Password tempPassword, Instant expiresAt) {
         var passwordReset = new PasswordReset();

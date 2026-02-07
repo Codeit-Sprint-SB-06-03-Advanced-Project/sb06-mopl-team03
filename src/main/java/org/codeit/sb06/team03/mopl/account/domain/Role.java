@@ -14,4 +14,8 @@ public enum Role {
     public static boolean contains(String name) {
         return names.contains(name);
     }
+
+    public static Role parse(String name) {
+        return Role.valueOf(name.toUpperCase());
+    }
 }
