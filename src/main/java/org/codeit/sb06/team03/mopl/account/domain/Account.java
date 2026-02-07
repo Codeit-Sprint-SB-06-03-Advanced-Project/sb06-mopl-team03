@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.codeit.sb06.team03.mopl.account.application.in.UpdatePasswordCommand;
 import org.codeit.sb06.team03.mopl.account.domain.entity.PasswordReset;
 import org.codeit.sb06.team03.mopl.account.domain.event.AccountEvent;
 import org.codeit.sb06.team03.mopl.account.domain.policy.PasswordEncryptionPolicy;
