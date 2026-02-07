@@ -1,7 +1,6 @@
 package org.codeit.sb06.team03.mopl.user.infra.in;
 
 import lombok.RequiredArgsConstructor;
-import org.codeit.sb06.team03.mopl.account.infra.in.PasswordUpdateRequest;
 import org.codeit.sb06.team03.mopl.bff.BffUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package org.codeit.sb06.team03.mopl.account.infra.in;
+package org.codeit.sb06.team03.mopl.user.infra.in;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
