@@ -2,7 +2,6 @@ package org.codeit.sb06.team03.mopl.account.infra.out;
 
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.application.out.DeletePasswordResetPort;
-import org.codeit.sb06.team03.mopl.account.domain.entity.PasswordReset;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
