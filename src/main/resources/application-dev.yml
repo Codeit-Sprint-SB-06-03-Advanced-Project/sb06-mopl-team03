@@ -2,9 +2,31 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
+  mail:
+    host: ${mopl.mail.host}
+    port: ${mopl.mail.port}
+    username: ${mopl.mail.username}
+    password: ${mopl.mail.password}
+    properties:
+      mail:
+        smtp:
+          auth: ${mopl.mail.properties.mail.smtp.auth}
+          starttls:
+            enable: ${mopl.mail.properties.mail.smtp.starttls.enable}
 
 mopl:
   account:
     password-policy: "no"
     temp-password-policy: "fixed"
     temp-password-reset-timeout-policy-in-minutes: 3
+  mail:
+    host: "smtp.gmail.com"
+    port: 587
+    username: "이메일 기입 필수"
+    password: "비밀번호 기입 필수"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
