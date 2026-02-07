@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class AccountAppService implements RegisterAccountUseCase, UpdatePasswordUseCase, AssignRoleUseCase, UpdateLockStatusUseCase {
+public class AccountCommandService implements RegisterAccountUseCase, UpdatePasswordUseCase, AssignRoleUseCase, UpdateLockStatusUseCase {
 
     private final AccountService accountService;
     private final LoadAccountPort loadAccountPort;
