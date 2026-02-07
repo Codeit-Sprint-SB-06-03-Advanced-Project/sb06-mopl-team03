@@ -1,4 +1,4 @@
 @NonNullApi
-package org.codeit.sb06.team03.mopl.account.infra.in;
+package org.codeit.sb06.team03.mopl.user.domain.entity;
 
 import org.springframework.lang.NonNullApi;

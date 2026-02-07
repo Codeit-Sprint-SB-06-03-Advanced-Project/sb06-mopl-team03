@@ -2,12 +2,15 @@ package org.codeit.sb06.team03.mopl.account.application;
 
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.application.in.*;
-import org.codeit.sb06.team03.mopl.account.application.out.*;
+import org.codeit.sb06.team03.mopl.account.application.out.CreateUserPort;
+import org.codeit.sb06.team03.mopl.account.application.out.DeletePasswordResetPort;
+import org.codeit.sb06.team03.mopl.account.application.out.LoadAccountPort;
+import org.codeit.sb06.team03.mopl.account.application.out.SaveAccountPort;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
 import org.codeit.sb06.team03.mopl.account.domain.AccountService;
-import org.codeit.sb06.team03.mopl.account.domain.Role;
 import org.codeit.sb06.team03.mopl.account.domain.exception.*;
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
+import org.codeit.sb06.team03.mopl.account.domain.vo.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class AccountAppService implements RegisterAccountUseCase, UpdatePasswordUseCase, AssignRoleUseCase, UpdateLockStatusUseCase {
+public class AccountCommandService implements RegisterAccountUseCase, UpdatePasswordUseCase, AssignRoleUseCase, UpdateLockStatusUseCase {
 
     private final AccountService accountService;
     private final LoadAccountPort loadAccountPort;

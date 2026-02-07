@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
-import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidPasswordException;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
 import org.springframework.data.annotation.CreatedDate;
 

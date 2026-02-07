@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.domain.policy.PasswordEncryptionPolicy;
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
+import org.codeit.sb06.team03.mopl.account.domain.vo.Role;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
