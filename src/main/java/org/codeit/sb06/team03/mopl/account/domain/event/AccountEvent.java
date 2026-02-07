@@ -16,6 +16,13 @@ public abstract sealed class AccountEvent {
 
     @Getter
     @RequiredArgsConstructor
+    public static final class PasswordResetedEvent extends AccountEvent {
+        private final String emailAddress;
+        private final String rawTempPassword;
+        private final String expiresAt;
+    }
+
+    @RequiredArgsConstructor
     public static final class RoleUpdatedEvent extends AccountEvent {
         private final UUID accountId;
         private final Role role;

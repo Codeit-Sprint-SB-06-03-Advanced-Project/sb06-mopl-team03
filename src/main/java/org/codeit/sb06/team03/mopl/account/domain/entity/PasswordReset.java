@@ -9,6 +9,7 @@ import org.codeit.sb06.team03.mopl.account.domain.Account;
 import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidPasswordException;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "password_resets")
 public class PasswordReset {
 
@@ -46,5 +48,13 @@ public class PasswordReset {
 
     public boolean validateTempPassword(Password inputPassword) {
         return this.tempPassword.equals(inputPassword);
+    }
+
+    public static PasswordReset create(Account account, Password tempPassword, Instant expiresAt) {
+        var passwordReset = new PasswordReset();
+        passwordReset.account = account;
+        passwordReset.tempPassword = tempPassword;
+        passwordReset.expiresAt = expiresAt;
+        return passwordReset;
     }
 }

@@ -29,6 +29,11 @@ public class LoadAccountAdapter implements LoadAccountPort {
     }
 
     @Override
+    public Account findByEmailAddress(EmailAddress emailAddress) {
+        return repository.findByEmailAddress(emailAddress);
+    }
+
+    @Override
     public List<UserDto> findAll(CursorRequestUserDto query) {
         return repository.findAll(query);
     }

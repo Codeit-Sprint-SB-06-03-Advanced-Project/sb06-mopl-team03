@@ -7,6 +7,9 @@ import org.codeit.sb06.team03.mopl.account.domain.Account;
 import org.codeit.sb06.team03.mopl.account.domain.AccountService;
 import org.codeit.sb06.team03.mopl.account.domain.Role;
 import org.codeit.sb06.team03.mopl.account.domain.exception.*;
+import org.codeit.sb06.team03.mopl.account.domain.exception.AccountRegistrationFailedException;
+import org.codeit.sb06.team03.mopl.account.domain.exception.EmailAddressAlreadyExistsException;
+import org.codeit.sb06.team03.mopl.account.domain.exception.EmailAddressNotFoundException;
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +19,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
-public class AccountAppService implements RegisterAccountUseCase, UpdatePasswordUseCase, AssignRoleUseCase, UpdateLockStatusUseCase {
+public class AccountAppService implements RegisterAccountUseCase, AssignRoleUseCase, ResetPasswordUseCase, UpdatePasswordUseCase, UpdateLockStatusUseCase {
 
     private final AccountService accountService;
     private final LoadAccountPort loadAccountPort;
@@ -43,6 +46,22 @@ public class AccountAppService implements RegisterAccountUseCase, UpdatePassword
 
         saveAccountPort.save(newAccount);
         return newAccount;
+    }
+
+    @Override
+    @Transactional
+    public Account resetPassword(ResetPasswordCommand command) {
+        final EmailAddress emailAddress = command.emailAddress();
+
+        if (!loadAccountPort.existsByEmailAddress(emailAddress)) {
+            throw new EmailAddressNotFoundException(emailAddress);
+        }
+        Account existAccount = loadAccountPort.findByEmailAddress(emailAddress);
+
+        Account resetPasswordAccount = accountService.resetPassword(existAccount);
+
+        saveAccountPort.save(resetPasswordAccount);
+        return resetPasswordAccount;
     }
 
     @Override

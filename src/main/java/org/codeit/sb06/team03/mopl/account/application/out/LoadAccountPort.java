@@ -14,6 +14,7 @@ public interface LoadAccountPort {
     boolean existsByEmailAddress(EmailAddress emailAddress);
 
     Optional<Account> findById(UUID accountId);
+    Account findByEmailAddress(EmailAddress emailAddress);
 
     List<UserDto> findAll(CursorRequestUserDto query);
 
