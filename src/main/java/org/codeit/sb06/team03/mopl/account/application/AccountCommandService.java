@@ -2,7 +2,7 @@ package org.codeit.sb06.team03.mopl.account.application;
 
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.application.in.*;
-import org.codeit.sb06.team03.mopl.account.application.out.CreateUserPort;
+import org.codeit.sb06.team03.mopl.account.application.out.CreateProfilePort;
 import org.codeit.sb06.team03.mopl.account.application.out.DeletePasswordResetPort;
 import org.codeit.sb06.team03.mopl.account.application.out.LoadAccountPort;
 import org.codeit.sb06.team03.mopl.account.application.out.SaveAccountPort;
@@ -23,7 +23,7 @@ public class AccountCommandService implements RegisterAccountUseCase, AssignRole
 
     private final AccountService accountService;
     private final LoadAccountPort loadAccountPort;
-    private final CreateUserPort createUserPort;
+    private final CreateProfilePort createProfilePort;
     private final SaveAccountPort saveAccountPort;
     private final DeletePasswordResetPort deletePasswordResetPort;
 
@@ -38,7 +38,7 @@ public class AccountCommandService implements RegisterAccountUseCase, AssignRole
             throw new EmailAddressAlreadyExistsException(emailAddress.value());
         }
         Account newAccount = accountService.create(emailAddress, rawPassword);
-        createUserPort.create(newAccount.getId(), name)
+        createProfilePort.create(newAccount.getId(), name)
                 .exceptionally(throwable -> {
                     throw new AccountRegistrationFailedException(throwable);
                 })
