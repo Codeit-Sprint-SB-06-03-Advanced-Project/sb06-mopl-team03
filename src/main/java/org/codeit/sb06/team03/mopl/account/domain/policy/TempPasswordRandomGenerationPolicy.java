@@ -1,7 +1,6 @@
 package org.codeit.sb06.team03.mopl.account.domain.policy;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 /*import java.security.SecureRandom;
 import java.util.ArrayList;
