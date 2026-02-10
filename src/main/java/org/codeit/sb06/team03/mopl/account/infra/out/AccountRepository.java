@@ -2,11 +2,11 @@ package org.codeit.sb06.team03.mopl.account.infra.out;
 
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Role;
+import org.codeit.sb06.team03.mopl.user.domain.vo.TimeoutImage;
 import org.codeit.sb06.team03.mopl.user.infra.in.CursorRequestUserDto;
 import org.codeit.sb06.team03.mopl.user.infra.in.UserDto;
 import org.springframework.lang.Nullable;
@@ -65,12 +65,40 @@ public interface AccountRepository extends QuerydslJpaRepository<Account, UUID> 
         };
 
         sortDirection = sortDirection.equalsIgnoreCase("ASCENDING") ? "ASC" : "DESC";
-        return select(accountDtoProjection())
+
+        List<Account> result = select(account)
                 .from(account)
+                .innerJoin(account.profile).fetchJoin()
+                .leftJoin(account.profile.timeoutImage).fetchJoin()
                 .where(predicates)
                 .orderBy(orderByExpressions(sortDirection, sortBy))
                 .limit(1L + limit)
                 .fetch();
+
+        return result.stream()
+                .map(account -> {
+                    TimeoutImage timeoutImage = account.getProfile().getTimeoutImage();
+                    return new UserDto(
+                            account.getId(),
+                            account.getCreatedAt(),
+                            account.getEmailAddress().value(),
+                            account.getProfile().getName(),
+                            timeoutImage == null ? null : timeoutImage.getPresignedUrl(),
+                            account.getRole().name(),
+                            account.isLocked()
+                    );
+                })
+                .toList();
+
+//
+//        return select(accountDtoProjection())
+//                .from(account)
+//                .innerJoin(account.profile)
+//                .leftJoin(account.profile.timeoutImage)
+//                .where(predicates)
+//                .orderBy(orderByExpressions(sortDirection, sortBy))
+//                .limit(1L + limit)
+//                .fetch();
     }
 
     private static Expression<UserDto> accountDtoProjection() {
@@ -79,8 +107,8 @@ public interface AccountRepository extends QuerydslJpaRepository<Account, UUID> 
                 account.id,
                 account.createdAt,
                 account.emailAddress.value,
-                Expressions.nullExpression(String.class), // TODO: name - User 기능 구현하면 수정
-                Expressions.nullExpression(String.class), // TODO: profileImageUrl - User 기능 구현하면 수정
+                account.profile.name,
+                account.profile.timeoutImage.presignedUrl,
                 account.role.stringValue(),
                 account.locked
         );
@@ -119,8 +147,12 @@ public interface AccountRepository extends QuerydslJpaRepository<Account, UUID> 
         return switch (sortBy) {
             case "name" -> {
                 final String nameCursor = cursor;
-                // TODO: 사용자 모듈 개발 완료시 기능 제공 가능
-                throw new UnsupportedOperationException();
+                if ("ASCENDING".equalsIgnoreCase(sortDirection)) {
+                    yield account.profile.name.gt(nameCursor)
+                            .or(account.profile.name.eq(nameCursor).and(account.id.goe(idAfterUuid)));
+                }
+                yield account.profile.name.lt(nameCursor)
+                        .or(account.profile.name.eq(nameCursor).and(account.id.loe(idAfterUuid)));
             }
             case "email" -> {
                 final String emailCursor = cursor;
@@ -173,10 +205,7 @@ public interface AccountRepository extends QuerydslJpaRepository<Account, UUID> 
 
     private static OrderSpecifier<?> orderByCursor(String sortDirection, String sortBy) {
         return switch (sortBy) {
-            case "name" -> {
-                // TODO: 사용자 모듈 개발 완료시 기능 제공 가능
-                throw new UnsupportedOperationException();
-            }
+            case "name" -> new OrderSpecifier<>(Order.valueOf(sortDirection), account.profile.name);
             case "email" -> new OrderSpecifier<>(Order.valueOf(sortDirection), account.emailAddress.value);
             case "createdAt" -> new OrderSpecifier<>(Order.valueOf(sortDirection), account.createdAt);
             case "isLocked" -> new OrderSpecifier<>(Order.valueOf(sortDirection), account.locked);
@@ -207,11 +236,32 @@ public interface AccountRepository extends QuerydslJpaRepository<Account, UUID> 
 
     default Optional<UserDto> findById(String accountId) {
         final UUID accountIdUuid = UUID.fromString(accountId);
-        UserDto userDto = select(accountDtoProjection())
+        Account result = select(account)
                 .from(account)
+                .innerJoin(account.profile).fetchJoin()
+                .leftJoin(account.profile.timeoutImage).fetchJoin()
                 .where(account.id.eq(accountIdUuid))
                 .fetchFirst();
 
-        return Optional.ofNullable(userDto);
+        TimeoutImage timeoutImage = result.getProfile().getTimeoutImage();
+        return Optional.of(new UserDto(
+                result.getId(),
+                result.getCreatedAt(),
+                result.getEmailAddress().value(),
+                result.getProfile().getName(),
+                timeoutImage == null ? null : timeoutImage.getPresignedUrl(),
+                result.getRole().name(),
+                result.isLocked()
+        ));
+
+
+//        UserDto userDto = select(accountDtoProjection())
+//                .from(account)
+//                .innerJoin(account.profile)
+//                .leftJoin(account.profile.timeoutImage)
+//                .where(account.id.eq(accountIdUuid))
+//                .fetchFirst();
+//
+//        return Optional.ofNullable(userDto);
     }
 }

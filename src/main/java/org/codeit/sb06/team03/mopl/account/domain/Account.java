@@ -13,6 +13,7 @@ import org.codeit.sb06.team03.mopl.account.domain.policy.TempPasswordResetTimeou
 import org.codeit.sb06.team03.mopl.account.domain.vo.EmailAddress;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Role;
+import org.codeit.sb06.team03.mopl.user.domain.Profile;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -58,6 +59,9 @@ public class Account extends AbstractAggregateRoot<Account> {
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private PasswordReset passwordReset;
+
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Profile profile;
 
     public static Account create(EmailAddress emailAddress, Password password) {
         var account = new Account();
@@ -105,5 +109,10 @@ public class Account extends AbstractAggregateRoot<Account> {
                 emailAddress.value(), rawTempPassword, expiresAt.toString()
         ));
         return this;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+        profile.setAccount(this);
     }
 }

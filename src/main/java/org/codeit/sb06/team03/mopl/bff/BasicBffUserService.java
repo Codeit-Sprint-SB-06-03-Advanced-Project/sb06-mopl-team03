@@ -3,10 +3,15 @@ package org.codeit.sb06.team03.mopl.bff;
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.application.in.*;
 import org.codeit.sb06.team03.mopl.account.domain.Account;
+import org.codeit.sb06.team03.mopl.user.application.in.UpdateProfileCommand;
+import org.codeit.sb06.team03.mopl.user.application.in.UpdateProfileUseCase;
+import org.codeit.sb06.team03.mopl.user.domain.Profile;
+import org.codeit.sb06.team03.mopl.user.infra.ProfileMapper;
 import org.codeit.sb06.team03.mopl.user.infra.in.*;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Instant;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -14,25 +19,20 @@ import java.util.UUID;
 public class BasicBffUserService implements BffUserService {
 
     private final AccountMapper accountMapper;
+    private final ProfileMapper profileMapper;
     private final RegisterAccountUseCase registerAccountUseCase;
     private final AssignRoleUseCase assignRoleUseCase;
     private final UpdateLockStatusUseCase updateLockStatusUseCase;
     private final UpdatePasswordUseCase updatePasswordUseCase;
     private final GetAccountUseCase getAccountUseCase;
+    private final UpdateProfileUseCase updateProfileUseCase;
 
     @Override
     public UserDto registerAccount(UserCreateRequest request) {
         RegisterAccountCommand command = accountMapper.toCommand(request);
         Account newAccount = registerAccountUseCase.register(command);
 
-        UUID id = newAccount.getId();
-        Instant createdAt = newAccount.getCreatedAt();
-        String emailAddress = newAccount.getEmailAddress().value();
-        String name = null; // TODO
-        String profileImageUrl = null; // TODO
-        String role = null; // TODO
-        Boolean locked = null; // TODO
-        return new UserDto(id, createdAt, emailAddress, name, profileImageUrl, role, locked); // TODO
+        return getAccountUseCase.get(newAccount.getId().toString());
     }
 
     @Override
@@ -62,5 +62,12 @@ public class BasicBffUserService implements BffUserService {
     @Override
     public UserDto getUser(String userId) {
         return getAccountUseCase.get(userId);
+    }
+
+    @Override
+    public UserDto updateProfile(String userId, UserUpdateRequest request, @Nullable MultipartFile image) {
+        UpdateProfileCommand command = profileMapper.toCommand(userId, request, image);
+        Profile updated = updateProfileUseCase.update(command);
+        return getAccountUseCase.get(updated.getAccountId().toString());
     }
 }

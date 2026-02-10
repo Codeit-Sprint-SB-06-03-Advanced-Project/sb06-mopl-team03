@@ -16,7 +16,7 @@ public class UserControllerAdvice {
 
     @ExceptionHandler(EmailAddressAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(EmailAddressAlreadyExistsException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
 
         var errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
@@ -29,7 +29,7 @@ public class UserControllerAdvice {
 
     @ExceptionHandler(InvalidEmailAddressException.class)
     public ResponseEntity<ErrorResponse> handleInvalidEmailException(InvalidEmailAddressException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
 
         var errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
@@ -42,7 +42,7 @@ public class UserControllerAdvice {
 
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<ErrorResponse> handleInvalidPasswordException(InvalidPasswordException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
 
         var errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
@@ -55,7 +55,7 @@ public class UserControllerAdvice {
 
     @ExceptionHandler(AccountRegistrationFailedException.class)
     public ResponseEntity<ErrorResponse> handleAccountRegistrationFailedException(AccountRegistrationFailedException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
 
         var errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
@@ -68,7 +68,7 @@ public class UserControllerAdvice {
 
     @ExceptionHandler(InvalidAccountIdFormatException.class)
     public ResponseEntity<ErrorResponse> handleInvalidAccountIdFormatException(InvalidAccountIdFormatException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
         var errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
                 "UUID 형식이 일치하지 않습니다.",
@@ -79,7 +79,7 @@ public class UserControllerAdvice {
 
     @ExceptionHandler(InvalidRoleException.class)
     public ResponseEntity<ErrorResponse> handleInvalidRoleException(InvalidRoleException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
         var errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
                 "존재하지 않는 Role 입니다.",
@@ -90,7 +90,7 @@ public class UserControllerAdvice {
 
     @ExceptionHandler(AccountNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleAccountNotFoundException(AccountNotFoundException e) {
-        log.error(e.getMessage());
+        log.error(e.getMessage(), e);
         var errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
                 "Account를 찾을 수 없습니다.",

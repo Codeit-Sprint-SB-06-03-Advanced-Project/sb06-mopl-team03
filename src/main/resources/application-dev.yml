@@ -30,3 +30,10 @@ mopl:
           auth: true
           starttls:
             enable: true
+  storage:
+    aws-s3:
+      region: "ap-northeast-2"
+      bucket-name: "sb06-part3-team3-post-image"
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+      signature-duration-in-hours: 1

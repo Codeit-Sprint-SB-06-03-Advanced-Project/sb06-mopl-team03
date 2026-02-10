@@ -1,5 +1,6 @@
 package org.codeit.sb06.team03.mopl.account.application;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.application.in.GetAccountUseCase;
 import org.codeit.sb06.team03.mopl.account.application.out.LoadAccountPort;
@@ -16,6 +17,7 @@ import static org.codeit.sb06.team03.mopl.user.infra.in.CursorResponseUserDto.So
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class AccountQueryService implements GetAccountUseCase {
 
     private final LoadAccountPort loadAccountPort;

@@ -3,6 +3,7 @@ package org.codeit.sb06.team03.mopl.account.infra.out;
 import org.codeit.sb06.team03.mopl.account.application.out.CreateProfilePort;
 import org.codeit.sb06.team03.mopl.user.application.in.CreateProfileCommand;
 import org.codeit.sb06.team03.mopl.user.application.in.CreateProfileUseCase;
+import org.codeit.sb06.team03.mopl.user.domain.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -18,11 +19,10 @@ public class CreateProfileAdapter implements CreateProfilePort {
     }
 
     @Override
-    public CompletableFuture<Void> create(UUID accountId, String name) {
+    public CompletableFuture<Profile> create(UUID accountId, String name) {
         return CompletableFuture.supplyAsync(() -> {
             var command = new CreateProfileCommand(accountId, name);
-            createProfileUseCase.create(command);
-            return null;
+            return createProfileUseCase.create(command);
         });
     }
 }

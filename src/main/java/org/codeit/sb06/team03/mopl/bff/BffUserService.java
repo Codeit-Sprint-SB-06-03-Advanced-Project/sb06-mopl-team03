@@ -1,6 +1,8 @@
 package org.codeit.sb06.team03.mopl.bff;
 
 import org.codeit.sb06.team03.mopl.user.infra.in.*;
+import org.springframework.lang.Nullable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -17,4 +19,6 @@ public interface BffUserService {
     CursorResponseUserDto getUsers(CursorRequestUserDto request);
 
     UserDto getUser(String userId);
+
+    UserDto updateProfile(String userId, UserUpdateRequest request, @Nullable MultipartFile image);
 }

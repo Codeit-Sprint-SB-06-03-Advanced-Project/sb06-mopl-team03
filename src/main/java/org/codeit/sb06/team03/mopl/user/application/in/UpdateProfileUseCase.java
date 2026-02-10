@@ -2,7 +2,7 @@ package org.codeit.sb06.team03.mopl.user.application.in;
 
 import org.codeit.sb06.team03.mopl.user.domain.Profile;
 
-public interface CreateProfileUseCase {
+public interface UpdateProfileUseCase {
 
-    Profile create(CreateProfileCommand command);
+    Profile update(UpdateProfileCommand command);
 }
