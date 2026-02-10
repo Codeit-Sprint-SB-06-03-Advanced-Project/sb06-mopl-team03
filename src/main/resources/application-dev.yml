@@ -37,3 +37,10 @@ mopl:
       access-key: ${AWS_ACCESS_KEY}
       secret-key: ${AWS_SECRET_KEY}
       signature-duration-in-hours: 1
+  jwt:
+    access-token:
+      secret: ${JWT_ACCESS_TOKEN_SECRET:sb06-mopl-team03-jwt-temporary-secret}
+      expiration-in-minutes: ${ACCESS_TOKEN_EXPIRATION_MS:300_000}
+    refresh-token:
+      secret: ${JWT_ACCESS_TOKEN_SECRET:sb06-mopl-team03-jwt-temporary-secret}
+      expiration-in-minutes: ${REFRESH_TOKEN_EXPIRATION_MS:604_800_000}
