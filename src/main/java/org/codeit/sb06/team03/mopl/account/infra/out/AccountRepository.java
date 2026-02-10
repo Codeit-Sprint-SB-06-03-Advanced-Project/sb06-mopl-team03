@@ -23,7 +23,7 @@ public interface AccountRepository extends QuerydslJpaRepository<Account, UUID> 
 
     boolean existsByEmailAddress(EmailAddress emailAddress);
 
-    Account findByEmailAddress(EmailAddress emailAddress);
+    Optional<Account> findByEmailAddress(EmailAddress emailAddress);
 
     default List<UserDto> findAll(CursorRequestUserDto query) {
         final String emailLike = query.emailLike();

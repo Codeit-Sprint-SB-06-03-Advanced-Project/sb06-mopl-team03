@@ -55,10 +55,8 @@ public class AccountCommandService implements RegisterAccountUseCase, AssignRole
     public Account resetPassword(ResetPasswordCommand command) {
         final EmailAddress emailAddress = command.emailAddress();
 
-        if (!loadAccountPort.existsByEmailAddress(emailAddress)) {
-            throw new EmailAddressNotFoundException(emailAddress);
-        }
-        Account existAccount = loadAccountPort.findByEmailAddress(emailAddress);
+        Account existAccount = loadAccountPort.findByEmailAddress(emailAddress)
+                .orElseThrow(() -> new EmailAddressNotFoundException(emailAddress));
 
         Account resetPasswordAccount = accountService.resetPassword(existAccount);
 
