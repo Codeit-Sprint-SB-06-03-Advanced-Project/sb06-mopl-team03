@@ -44,3 +44,4 @@ mopl:
     refresh-token:
       secret: ${JWT_ACCESS_TOKEN_SECRET:sb06-mopl-team03-jwt-temporary-secret}
       expiration-in-minutes: ${REFRESH_TOKEN_EXPIRATION_MS:604_800_000}
+      secret: ${JWT_REFRESH_TOKEN_SECRET:sb06-mopl-team03-jwt-temporary-secret}
