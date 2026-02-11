@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class RefreshTokenCookieProvider {
 
     private final int maxAge;
-    private final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
+    public final String REFRESH_TOKEN_COOKIE_NAME = "REFRESH_TOKEN";
 
     public RefreshTokenCookieProvider(
             @Value("${mopl.jwt.refresh-token.expiration-ms}") int refreshTokenExpirationMs
