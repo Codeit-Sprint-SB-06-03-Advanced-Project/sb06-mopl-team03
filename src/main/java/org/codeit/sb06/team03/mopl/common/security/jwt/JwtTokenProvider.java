@@ -84,11 +84,12 @@ public class JwtTokenProvider {
         UUID accountId = UUID.fromString(claimsSet.getSubject());
         String email = claims.get(JwtClaimNames.EMAIL).toString();
         String name = claims.get(JwtClaimNames.NAME).toString();
-        String presignedImageUrl = claims.get(JwtClaimNames.PROFILE_IMAGE_URL).toString();
+        Object profileImageUrlObject = claims.getOrDefault(JwtClaimNames.PROFILE_IMAGE_URL, null);
+        String profileImageUrl = profileImageUrlObject != null ? profileImageUrlObject.toString() : null;
         String role = claims.get(JwtClaimNames.ROLE).toString();
 
         return new JwtClaims(
-                accountId, email, name, presignedImageUrl, role
+                accountId, email, name, profileImageUrl, role
         );
     }
 
