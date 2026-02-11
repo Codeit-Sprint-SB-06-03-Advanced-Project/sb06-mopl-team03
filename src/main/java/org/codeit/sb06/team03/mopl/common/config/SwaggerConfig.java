@@ -15,12 +15,14 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .addSecurityItem(
-                        new SecurityRequirement().addList("Bearer Authentication")
+                        new SecurityRequirement()
+                                .addList("Bearer Authentication")
+                                .addList("CSRF")
                 )
                 .components(
-                        new Components().addSecuritySchemes(
-                                "Bearer Authentication", createSecurityScheme()
-                        )
+                        new Components()
+                                .addSecuritySchemes("Bearer Authentication", createTokenSecurityScheme())
+                                .addSecuritySchemes("CSRF", createCsrfSecurityScheme())
                 )
                 .info(
                         new Info()
@@ -30,9 +32,15 @@ public class SwaggerConfig {
                 );
     }
 
-    private SecurityScheme createSecurityScheme() {
+    private SecurityScheme createTokenSecurityScheme() {
         return new SecurityScheme().type(SecurityScheme.Type.HTTP)
                 .bearerFormat("JWT")
                 .scheme("bearer");
+    }
+
+    private SecurityScheme createCsrfSecurityScheme() {
+        return new SecurityScheme().type(SecurityScheme.Type.APIKEY)
+                .in(SecurityScheme.In.HEADER)
+                .name("X-XSRF-TOKEN");
     }
 }
