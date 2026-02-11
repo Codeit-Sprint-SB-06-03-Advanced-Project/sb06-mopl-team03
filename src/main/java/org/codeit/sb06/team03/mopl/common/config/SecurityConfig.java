@@ -2,22 +2,25 @@ package org.codeit.sb06.team03.mopl.common.config;
 
 import org.codeit.sb06.team03.mopl.account.domain.vo.Role;
 import org.codeit.sb06.team03.mopl.common.security.LoginFailureHandler;
+import org.codeit.sb06.team03.mopl.common.security.MoplAccessDeniedHandler;
+import org.codeit.sb06.team03.mopl.common.security.MoplAuthenticationEntryPoint;
 import org.codeit.sb06.team03.mopl.common.security.SpaCsrfTokenRequestHandler;
 import org.codeit.sb06.team03.mopl.common.security.jwt.JwtAuthenticationFilter;
 import org.codeit.sb06.team03.mopl.common.security.jwt.JwtLoginSuccessHandler;
+import org.codeit.sb06.team03.mopl.common.security.jwt.JwtLogoutHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
@@ -31,8 +34,9 @@ public class SecurityConfig {
             JwtLoginSuccessHandler loginSuccessHandler,
             LoginFailureHandler loginFailureHandler,
             JwtAuthenticationFilter jwtAuthenticationFilter,
-            AuthenticationEntryPoint authenticationEntryPoint,
-            AccessDeniedHandler accessDeniedHandler
+            MoplAuthenticationEntryPoint authenticationEntryPoint,
+            MoplAccessDeniedHandler accessDeniedHandler,
+            JwtLogoutHandler logoutHandler
     ) throws Exception {
         http
                 .csrf(csrf -> csrf
@@ -58,6 +62,13 @@ public class SecurityConfig {
                         .loginProcessingUrl("/api/auth/sign-in")
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailureHandler)
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/api/auth/sign-out")
+                        .addLogoutHandler(logoutHandler)
+                        .logoutSuccessHandler(
+                                new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT)
+                        )
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
