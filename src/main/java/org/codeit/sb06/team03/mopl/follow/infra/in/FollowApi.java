@@ -20,11 +20,11 @@ public interface FollowApi {
 
     @Operation(summary = "팔로우")
     @ApiResponse(responseCode = "201", description = "성공")
-    ResponseEntity<FollowDto> postFollows(@Valid FollowRequest request);
+    ResponseEntity<FollowDto> postFollows(@Valid FollowRequest request, @UUID String userId);
 
     @Operation(summary = "특정 유저를 내가 팔로우하는지 여부 조회")
     @ApiResponse(responseCode = "200", description = "성공")
-    ResponseEntity<Boolean> getFollowsFollowedByMe(@Parameter(schema = @Schema(format = "uuid")) @UUID String followeeId);
+    ResponseEntity<Boolean> getFollowsFollowedByMe(@Parameter(schema = @Schema(format = "uuid")) @UUID String followeeId, @UUID String userId);
 
     @Operation(summary = "특정 유저의 팔로워 수 조회")
     @ApiResponse(responseCode = "200", description = "성공")
@@ -32,5 +32,5 @@ public interface FollowApi {
 
     @Operation(summary = "팔로우 취소", description = "API 요청자 본인의 팔로우만 취소할 수 있습니다.")
     @ApiResponse(responseCode = "204", description = "성공")
-    ResponseEntity<Void> deleteFollows(@UUID String followId);
+    ResponseEntity<Void> deleteFollows(@Parameter(schema = @Schema(format = "uuid")) @UUID String followId, @UUID String userId);
 }
