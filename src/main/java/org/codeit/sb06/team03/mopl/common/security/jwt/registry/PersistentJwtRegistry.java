@@ -83,7 +83,7 @@ public class PersistentJwtRegistry implements JwtRegistry {
 
     @Override
     public TokenPair rotate(String oldRefreshToken) {
-        if (!jwtTokenProvider.validateRefreshToken(oldRefreshToken)) {
+        if (!hasActiveRefreshToken(oldRefreshToken)) {
             throw new InvalidTokenException();
         }
 
