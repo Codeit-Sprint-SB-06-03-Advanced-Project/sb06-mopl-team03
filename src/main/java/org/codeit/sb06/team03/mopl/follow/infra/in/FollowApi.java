@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.codeit.sb06.team03.mopl.common.error.ErrorResponse;
+import org.codeit.sb06.team03.mopl.common.security.MoplUserDetails;
 import org.hibernate.validator.constraints.UUID;
 import org.springframework.http.ResponseEntity;
 
@@ -20,11 +21,11 @@ public interface FollowApi {
 
     @Operation(summary = "팔로우")
     @ApiResponse(responseCode = "201", description = "성공")
-    ResponseEntity<FollowDto> postFollows(@Valid FollowRequest request, @UUID String userId);
+    ResponseEntity<FollowDto> postFollows(@Valid FollowRequest request, MoplUserDetails userDetails);
 
     @Operation(summary = "특정 유저를 내가 팔로우하는지 여부 조회")
     @ApiResponse(responseCode = "200", description = "성공")
-    ResponseEntity<Boolean> getFollowsFollowedByMe(@Parameter(schema = @Schema(format = "uuid")) @UUID String followeeId, @UUID String userId);
+    ResponseEntity<Boolean> getFollowsFollowedByMe(@Parameter(schema = @Schema(format = "uuid")) @UUID String followeeId, MoplUserDetails userDetails);
 
     @Operation(summary = "특정 유저의 팔로워 수 조회")
     @ApiResponse(responseCode = "200", description = "성공")
@@ -32,5 +33,5 @@ public interface FollowApi {
 
     @Operation(summary = "팔로우 취소", description = "API 요청자 본인의 팔로우만 취소할 수 있습니다.")
     @ApiResponse(responseCode = "204", description = "성공")
-    ResponseEntity<Void> deleteFollows(@Parameter(schema = @Schema(format = "uuid")) @UUID String followId, @UUID String userId);
+    ResponseEntity<Void> deleteFollows(@Parameter(schema = @Schema(format = "uuid")) @UUID String followId, MoplUserDetails userDetails);
 }

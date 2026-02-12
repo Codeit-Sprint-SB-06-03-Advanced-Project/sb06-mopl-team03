@@ -16,21 +16,21 @@ public class FollowMapper {
         return new CreateFollowCommand(accountId);
     }
 
-    public FollowCommand toCommand(FollowRequest request, String userId) {
+    public FollowCommand toCommand(FollowRequest request, UUID userId) {
         UUID followeeId = UUID.fromString(request.followeeId());
-        UUID followerId = UUID.fromString(userId);
+        UUID followerId = userId;
         return new FollowCommand(followeeId, followerId);
     }
 
-    public UnfollowCommand toCommand(String followId, String userId) {
-        UUID followeeId = UUID.fromString(userId);
+    public UnfollowCommand toCommand(String followId, UUID userId) {
+        UUID followeeId = userId;
         UUID unfollowId = UUID.fromString(followId);
         return new UnfollowCommand(followeeId, unfollowId);
     }
 
-    public FollowQuery toQuery(String followeeId, String userId) {
-        UUID followerId = UUID.fromString(userId);
+    public FollowQuery toQuery(String followeeId, UUID userId) {
         UUID followeeUUID = UUID.fromString(followeeId);
+        UUID followerId = userId;
         return new FollowQuery(followeeUUID, followerId);
     }
 }

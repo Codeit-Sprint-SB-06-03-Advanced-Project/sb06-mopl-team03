@@ -70,12 +70,12 @@ public class FollowCommandService implements CreateFollowUseCase, ToggleFollowUs
 
     @Override
     public void unfollow(UnfollowCommand command) {
-        UUID followeeId = command.followeeId();
+        UUID followerId = command.followerId();
         UUID unfollowId = command.unfollowId();
 
-        Followee followee = loadFolloweePort.findById(followeeId)
-                .orElseThrow(() -> new FolloweeNotFoundException(followeeId));
-        Followee followed = service.unfollow(followee, unfollowId);
+        Followee followee = loadFolloweePort.findById(unfollowId)
+                .orElseThrow(() -> new FolloweeNotFoundException(unfollowId));
+        Followee followed = service.unfollow(followee, followerId);
         saveFolloweePort.save(followed);
     }
 }

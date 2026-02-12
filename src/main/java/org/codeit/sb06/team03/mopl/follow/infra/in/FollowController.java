@@ -1,9 +1,11 @@
 package org.codeit.sb06.team03.mopl.follow.infra.in;
 
+import org.codeit.sb06.team03.mopl.common.security.MoplUserDetails;
 import org.codeit.sb06.team03.mopl.follow.application.in.*;
 import org.codeit.sb06.team03.mopl.follow.infra.FollowMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,16 +28,16 @@ public class FollowController implements FollowApi {
 
     @Override
     @PostMapping
-    public ResponseEntity<FollowDto> postFollows(@RequestBody FollowRequest request, @RequestHeader("X-USER-ID") String userId) {
-        FollowCommand command = mapper.toCommand(request, userId);
+    public ResponseEntity<FollowDto> postFollows(@RequestBody FollowRequest request, @AuthenticationPrincipal MoplUserDetails userDetails) {
+        FollowCommand command = mapper.toCommand(request, userDetails.getId());
         FollowDto response = toggleFollowUseCase.follow(command);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Override
     @GetMapping("/followed-by-me")
-    public ResponseEntity<Boolean> getFollowsFollowedByMe(@RequestParam String followeeId, @RequestHeader("X-USER-ID") String userId) {
-        FollowQuery query = mapper.toQuery(followeeId, userId);
+    public ResponseEntity<Boolean> getFollowsFollowedByMe(@RequestParam String followeeId, @AuthenticationPrincipal MoplUserDetails userDetails) {
+        FollowQuery query = mapper.toQuery(followeeId, userDetails.getId());
         boolean response = getFollowUseCase.followedByMe(query);
         return ResponseEntity.ok(response);
     }
@@ -49,8 +51,8 @@ public class FollowController implements FollowApi {
 
     @Override
     @DeleteMapping("/{followId}")
-    public ResponseEntity<Void> deleteFollows(@PathVariable String followId, @RequestHeader("X-USER-ID") String userId) {
-        UnfollowCommand command = mapper.toCommand(followId, userId);
+    public ResponseEntity<Void> deleteFollows(@PathVariable String followId, @AuthenticationPrincipal MoplUserDetails userDetails) {
+        UnfollowCommand command = mapper.toCommand(followId, userDetails.getId());
         toggleFollowUseCase.unfollow(command);
         return ResponseEntity.noContent().build();
     }

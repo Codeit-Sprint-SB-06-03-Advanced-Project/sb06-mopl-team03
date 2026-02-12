@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @RequiredArgsConstructor
@@ -35,5 +36,9 @@ public class MoplUserDetails implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         return !userDto.locked();
+    }
+
+    public UUID getId() {
+        return userDto.id();
     }
 }
