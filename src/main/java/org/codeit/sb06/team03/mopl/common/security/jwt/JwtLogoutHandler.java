@@ -23,13 +23,9 @@ public class JwtLogoutHandler implements LogoutHandler {
         Cookie refreshTokenCookie = cookieProvider.generateRefreshTokenExpirationCookie();
         response.addCookie(refreshTokenCookie);
 
-        Cookie[] cookies = request.getCookies();
-
-        if (cookies != null) {
-            Arrays.stream(cookies)
-                    .filter(cookie -> cookie.getName().equals(cookieProvider.REFRESH_TOKEN_COOKIE_NAME))
-                    .findFirst()
-                    .ifPresent(cookie -> jwtRegistry.invalidateToken(cookie.getValue()));
+        Cookie oldRefreshTokenCookie = cookieProvider.resolveCookie(request);
+        if (oldRefreshTokenCookie != null) {
+            jwtRegistry.invalidateToken(oldRefreshTokenCookie.getValue());
         }
     }
 }
