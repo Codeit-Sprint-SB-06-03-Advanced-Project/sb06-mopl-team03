@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.codeit.sb06.team03.mopl.follow.domain.entity.Follower;
 import org.codeit.sb06.team03.mopl.follow.domain.entity.FollowerId;
-import org.codeit.sb06.team03.mopl.follow.domain.event.FollowEvent;
 import org.codeit.sb06.team03.mopl.follow.domain.event.FollowEvent.FollowedEvent;
 import org.codeit.sb06.team03.mopl.follow.domain.event.FollowEvent.FolloweeCreatedEvent;
 import org.springframework.data.domain.AbstractAggregateRoot;
@@ -14,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.codeit.sb06.team03.mopl.follow.domain.event.FollowEvent.*;
+import static org.codeit.sb06.team03.mopl.follow.domain.event.FollowEvent.UnfollowedEvent;
 
 @Getter
 @Setter
