@@ -5,7 +5,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.codeit.sb06.team03.mopl.common.security.jwt.JwtDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.web.csrf.CsrfToken;
 
@@ -24,4 +27,11 @@ public interface AuthApi {
     @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @ApiResponse(responseCode = "500", description = "서버 오류")
     ResponseEntity<Void> getCsrfToken(@Parameter(hidden = true) CsrfToken csrfToken);
+
+    @Operation(summary = "refresh token 재발급")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    @ApiResponse(responseCode = "401", description = "인증 오류")
+    @ApiResponse(responseCode = "500", description = "서버 오류")
+    ResponseEntity<JwtDto> refresh(HttpServletRequest request, HttpServletResponse response);
 }
