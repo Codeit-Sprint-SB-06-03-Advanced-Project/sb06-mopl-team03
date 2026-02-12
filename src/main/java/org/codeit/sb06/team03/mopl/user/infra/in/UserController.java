@@ -1,5 +1,6 @@
 package org.codeit.sb06.team03.mopl.user.infra.in;
 
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.bff.BffUserService;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,7 @@ public class UserController implements UserApi {
 
     @Override
     @PatchMapping("/{userId}/role")
+    @RolesAllowed("ADMIN")
     public ResponseEntity<Void> patchUsersRole(
             @PathVariable(name = "userId") String userId,
             @RequestBody UserRoleUpdateRequest request
@@ -46,6 +48,7 @@ public class UserController implements UserApi {
 
     @Override
     @PatchMapping("/{userId}/locked")
+    @RolesAllowed("ADMIN")
     public ResponseEntity<Void> patchUsersLockStatus(
             @PathVariable(name = "userId") String userId,
             @RequestBody UserLockUpdateRequest request
@@ -57,6 +60,7 @@ public class UserController implements UserApi {
 
     @Override
     @GetMapping
+    @RolesAllowed("ADMIN")
     public ResponseEntity<CursorResponseUserDto> getUsers(@ModelAttribute CursorRequestUserDto request) {
         CursorResponseUserDto response = bffUserService.getUsers(request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
