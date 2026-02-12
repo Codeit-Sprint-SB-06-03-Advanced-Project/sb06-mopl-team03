@@ -34,4 +34,18 @@ public interface AuthApi {
     @ApiResponse(responseCode = "401", description = "인증 오류")
     @ApiResponse(responseCode = "500", description = "서버 오류")
     ResponseEntity<JwtDto> refresh(HttpServletRequest request, HttpServletResponse response);
+
+    @Operation(summary = "로그인")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    @ApiResponse(responseCode = "401", description = "인증 오류")
+    @ApiResponse(responseCode = "500", description = "서버 오류")
+    ResponseEntity<JwtDto> login(@Parameter(description = "email 입니다.") String username, String password);
+
+    @Operation(summary = "로그아웃")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    @ApiResponse(responseCode = "401", description = "인증 오류")
+    @ApiResponse(responseCode = "500", description = "서버 오류")
+    ResponseEntity<Void> logout();
 }

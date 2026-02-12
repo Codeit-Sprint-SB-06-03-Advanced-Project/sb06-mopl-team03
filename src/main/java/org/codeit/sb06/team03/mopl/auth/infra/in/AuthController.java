@@ -54,4 +54,18 @@ public class AuthController implements AuthApi{
 
         return ResponseEntity.ok(jwtDto);
     }
+
+    @Override
+    @PostMapping("/sign-in")
+    public ResponseEntity<JwtDto> login(
+            @RequestParam(name = "username") String username,
+            @RequestParam(name = "password") String password) {
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @Override
+    @PostMapping("/sign-out")
+    public ResponseEntity<Void> logout() {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
