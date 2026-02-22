@@ -1,8 +1,13 @@
 package org.codeit.sb06.team03.mopl.user.infra.in;
 
 import lombok.extern.slf4j.Slf4j;
+import org.codeit.sb06.team03.mopl.account.domain.exception.AccountRegistrationFailedException;
+import org.codeit.sb06.team03.mopl.account.domain.exception.EmailAddressAlreadyExistsException;
+import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidEmailAddressException;
+import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidPasswordException;
 import org.codeit.sb06.team03.mopl.account.domain.exception.*;
 import org.codeit.sb06.team03.mopl.common.error.ErrorResponse;
+import org.codeit.sb06.team03.mopl.playlist.domain.exception.PlaylistNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -94,6 +99,17 @@ public class UserControllerAdvice {
         var errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
                 "Account를 찾을 수 없습니다.",
+                Collections.emptyList()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+
+    @ExceptionHandler(PasswordResetNotFound.class)
+    public ResponseEntity<ErrorResponse> handlePasswordResetNotFound(PasswordResetNotFound e) {
+        log.error(e.getMessage());
+        var errorResponse = new ErrorResponse(
+                e.getClass().getSimpleName(),
+                "PasswordReset을 찾을 수 없습니다.",
                 Collections.emptyList()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);

@@ -29,7 +29,7 @@ public class LoadAccountAdapter implements LoadAccountPort {
     }
 
     @Override
-    public Account findByEmailAddress(EmailAddress emailAddress) {
+    public Optional<Account> findByEmailAddress(EmailAddress emailAddress) {
         return repository.findByEmailAddress(emailAddress);
     }
 

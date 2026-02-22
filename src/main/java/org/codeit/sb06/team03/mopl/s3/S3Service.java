@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
@@ -41,14 +40,9 @@ public class S3Service {
     }
 
     public String createPresignedUrl(String key, Duration timeout) {
-        GetObjectRequest request = GetObjectRequest.builder()
-                .bucket(properties.bucketName())
-                .key(key)
-                .build();
-
         GetObjectPresignRequest presignedRequest = GetObjectPresignRequest.builder()
                 .signatureDuration(timeout)
-                .getObjectRequest(request)
+                .getObjectRequest(builder -> builder.bucket(properties.bucketName()).key(key))
                 .build();
         return presigner.presignGetObject(presignedRequest).url().toString();
     }
