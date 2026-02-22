@@ -2,23 +2,31 @@ package org.codeit.sb06.team03.mopl.dm.conversation.infra.in;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.codeit.sb06.team03.mopl.bff.BffDMService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/conversations")
 public class DMController implements DMApi{
 
+    private final BffDMService bffDMService;
+
     @Override
     @GetMapping
-    public ResponseEntity<CursorResponseConversationDto> getConversations(@Valid CursorRequestConversationDto request) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CursorResponseConversationDto> getConversations(@ModelAttribute CursorRequestConversationDto request) {
+        CursorResponseConversationDto response = bffDMService.getConversations(request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Override
     @PostMapping
     public ResponseEntity<ConversationDto> postConversation(@RequestBody(required = true) @Valid ConversationCreateRequest request) {
-        return ResponseEntity.ok().build();
+        ConversationDto response = bffDMService.postConversation(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Override
@@ -26,26 +34,30 @@ public class DMController implements DMApi{
     public ResponseEntity<Void> postReadDirectMessage(
             @PathVariable String conversationId,
             @PathVariable String directMessageId) {
-        return ResponseEntity.ok().build();
+        bffDMService.postReadDirectMessage(conversationId, directMessageId);
+        return ResponseEntity.noContent().build();
     }
 
     @Override
     @GetMapping("/{conversationId}")
     public ResponseEntity<ConversationDto> getConversation(@PathVariable String conversationId) {
-        return ResponseEntity.ok().build();
+        ConversationDto response = bffDMService.getConversation(conversationId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Override
     @GetMapping("/{conversationId}/direct-messages")
     public ResponseEntity<CursorResponseDirectMessageDto> getDirectMessages(
             @PathVariable String conversationId,
-            @Valid CursorRequestDirectMessageDto request) {
-        return ResponseEntity.ok().build();
+            @ModelAttribute CursorRequestDirectMessageDto request) {
+        CursorResponseDirectMessageDto response = bffDMService.getDirectMessages(conversationId, request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Override
     @GetMapping("/with")
     public ResponseEntity<ConversationDto> getConversationWith(@RequestParam String userId) {
-        return ResponseEntity.ok().build();
+        ConversationDto response = bffDMService.getConversationWith(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

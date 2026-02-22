@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,7 +19,7 @@ public interface DMApi {
     @ApiResponse(responseCode = "400", description = "잘못된 요청")
     @ApiResponse(responseCode = "401", description = "인증 오류")
     @ApiResponse(responseCode = "500", description = "서버 오류")
-    ResponseEntity<CursorResponseConversationDto> getConversations(@Valid CursorRequestConversationDto request);
+    ResponseEntity<CursorResponseConversationDto> getConversations(@ModelAttribute CursorRequestConversationDto request);
 
     @Operation(summary = "대화 생성")
     @ApiResponse(responseCode = "200", description = "성공")
@@ -52,7 +53,7 @@ public interface DMApi {
     @ApiResponse(responseCode = "500", description = "서버 오류")
     ResponseEntity<CursorResponseDirectMessageDto> getDirectMessages(
             @PathVariable String conversationId,
-            @Valid CursorRequestDirectMessageDto request
+            @ModelAttribute CursorRequestDirectMessageDto request
     );
 
     @Operation(summary = "특정 사용자와의 대화 조회")
