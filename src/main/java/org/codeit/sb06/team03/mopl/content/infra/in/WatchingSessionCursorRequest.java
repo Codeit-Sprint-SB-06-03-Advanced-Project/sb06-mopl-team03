@@ -50,7 +50,7 @@ public record WatchingSessionCursorRequest(
             try {
                 Instant.parse(cursor);
             } catch (DateTimeParseException e) {
-                throw new InvalidCursorFormatException(cursor);
+                throw InvalidCursorFormatException.from(cursor);
             }
         }
     }
