@@ -3,10 +3,13 @@ package org.codeit.sb06.team03.mopl.user.infra.in;
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.bff.BffUserService;
+import org.codeit.sb06.team03.mopl.common.SessionDetails;
+import org.codeit.sb06.team03.mopl.common.security.MoplUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -81,5 +84,18 @@ public class UserController implements UserApi {
     ) {
         UserDto response = bffUserService.updateProfile(userId, request, image);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Override
+    @GetMapping("/{watcherId}/watching-sessions")
+    public ResponseEntity<SessionDetails> getSessionDetails(
+            @PathVariable String watcherId,
+            @AuthenticationPrincipal MoplUserDetails userDetails
+    ) {
+        UUID watcherUuid = UUID.fromString(watcherId);
+
+        SessionDetails sessionDetails = bffUserService.getSessionDetails(watcherUuid, userDetails);
+
+        return ResponseEntity.ok(sessionDetails);
     }
 }
