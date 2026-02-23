@@ -19,6 +19,6 @@ public class DeleteWatchingSessionAdapter implements DeleteWatchingSessionPort {
 
     @Override
     public void deleteByLiveChatIdAndWatcherId(UUID liveChatId, UUID watcherId) {
-        watchingSessionRepository.deleteByLiveChat_contentIdAndWatcherId(liveChatId, watcherId);
+        watchingSessionRepository.deleteByLiveChatIdAndWatcherId(liveChatId, watcherId);
     }
 }

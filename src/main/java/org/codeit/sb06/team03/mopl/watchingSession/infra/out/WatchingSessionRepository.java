@@ -9,11 +9,11 @@ import java.util.UUID;
 
 public interface WatchingSessionRepository extends JpaRepository<WatchingSession, UUID> {
 
-    boolean existsByLiveChat_ContentIdAndWatcherId(UUID liveChatId, UUID watcherId);
+    boolean existsByLiveChatIdAndWatcherId(UUID liveChatId, UUID watcherId);
 
     void deleteByWatcherId(UUID watcherId);
 
-    void deleteByLiveChat_contentIdAndWatcherId(UUID liveChatContentId, UUID watcherId);
+    void deleteByLiveChatIdAndWatcherId(UUID liveChatId, UUID watcherId);
 
     Optional<WatchingSession> findByLiveChatIdAndWatcherId(UUID liveChatId, UUID watcherId);
 

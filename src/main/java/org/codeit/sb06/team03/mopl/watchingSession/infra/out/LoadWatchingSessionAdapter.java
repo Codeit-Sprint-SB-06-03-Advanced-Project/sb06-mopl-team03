@@ -16,7 +16,7 @@ public class LoadWatchingSessionAdapter implements LoadWatchingSessionPort {
 
     @Override
     public boolean existsByLiveChatIdAndWatcherId(UUID liveChatId, UUID watcherId) {
-        return watchingSessionRepository.existsByLiveChat_ContentIdAndWatcherId(liveChatId, watcherId);
+        return watchingSessionRepository.existsByLiveChatIdAndWatcherId(liveChatId, watcherId);
     }
 
     @Override
