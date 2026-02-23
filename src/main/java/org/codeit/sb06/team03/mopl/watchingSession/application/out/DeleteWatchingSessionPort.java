@@ -6,5 +6,5 @@ public interface DeleteWatchingSessionPort {
 
     void deleteByWatcherId(UUID watcherId);
 
-    void deleteByLiveChatIdAndWatcherId(UUID liveChatId, UUID watcherId);
+    void deleteById(UUID id);
 }

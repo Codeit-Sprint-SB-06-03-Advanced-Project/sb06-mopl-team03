@@ -10,6 +10,7 @@ import org.codeit.sb06.team03.mopl.watchingSession.application.out.LoadWatchingS
 import org.codeit.sb06.team03.mopl.watchingSession.application.out.SaveWatchingSessionPort;
 import org.codeit.sb06.team03.mopl.watchingSession.domain.WatchingSession;
 import org.codeit.sb06.team03.mopl.watchingSession.domain.exception.WatchingSessionDuplicateException;
+import org.codeit.sb06.team03.mopl.watchingSession.domain.exception.WatchingSessionNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,12 +49,20 @@ public class WatchingSessionCommandService implements
 
     @Override
     @Transactional
-    public void deleteByLiveChatIdAndWatcherId(UUID liveChatId, UUID watcherId) {
-        deleteWatchingSessionPort.deleteByLiveChatIdAndWatcherId(liveChatId, watcherId);
+    public void delete(UUID id) {
+        deleteWatchingSessionPort.deleteById(id);
     }
 
     @Override
     public List<WatchingSession> get(UUID watcherId) {
         return loadWatchingSessionPort.findByWatcherId(watcherId);
     }
+
+    @Override
+    public WatchingSession get(UUID liveChatId, UUID watcherId) {
+        return loadWatchingSessionPort.findByLiveChatIdAndWatcherId(liveChatId, watcherId)
+                .orElseThrow(() -> WatchingSessionNotFoundException.fromLiveChatIdAndWatcherId(liveChatId, watcherId));
+    }
+
+
 }

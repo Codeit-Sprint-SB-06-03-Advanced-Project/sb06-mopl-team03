@@ -13,8 +13,6 @@ public interface WatchingSessionRepository extends JpaRepository<WatchingSession
 
     void deleteByWatcherId(UUID watcherId);
 
-    void deleteByLiveChatIdAndWatcherId(UUID liveChatId, UUID watcherId);
-
     Optional<WatchingSession> findByLiveChatIdAndWatcherId(UUID liveChatId, UUID watcherId);
 
     int countByLiveChatId(UUID liveChatId);
