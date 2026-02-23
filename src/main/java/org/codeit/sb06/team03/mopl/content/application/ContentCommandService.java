@@ -8,7 +8,7 @@ import org.codeit.sb06.team03.mopl.content.application.in.GetContentUseCase;
 import org.codeit.sb06.team03.mopl.content.application.in.WatchingSessionCursorCommand;
 import org.codeit.sb06.team03.mopl.content.application.out.LoadContentPort;
 import org.codeit.sb06.team03.mopl.content.application.out.WatchingSessionCursorQuery;
-import org.codeit.sb06.team03.mopl.liveChat.domain.exception.ContentNotFoundException;
+import org.codeit.sb06.team03.mopl.content.domain.exception.ContentNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

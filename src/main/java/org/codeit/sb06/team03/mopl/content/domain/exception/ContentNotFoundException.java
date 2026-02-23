@@ -1,6 +1,4 @@
-package org.codeit.sb06.team03.mopl.liveChat.domain.exception;
-
-import org.codeit.sb06.team03.mopl.content.domain.exception.ContentException;
+package org.codeit.sb06.team03.mopl.content.domain.exception;
 
 import java.util.UUID;
 
