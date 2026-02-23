@@ -1,0 +1,26 @@
+package org.codeit.sb06.team03.mopl.watchingSession.infra.out;
+
+import lombok.RequiredArgsConstructor;
+import org.codeit.sb06.team03.mopl.watchingSession.application.out.LoadWatchingSessionPort;
+import org.codeit.sb06.team03.mopl.watchingSession.domain.WatchingSession;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.UUID;
+
+@Component
+@RequiredArgsConstructor
+public class LoadWatchingSessionAdapter implements LoadWatchingSessionPort {
+
+    private final WatchingSessionRepository watchingSessionRepository;
+
+    @Override
+    public boolean existsByLiveChatIdAndWatcherId(UUID liveChatId, UUID watcherId) {
+        return watchingSessionRepository.existsByLiveChat_ContentIdAndWatcherId(liveChatId, watcherId);
+    }
+
+    @Override
+    public List<WatchingSession> findByWatcherId(UUID watcherId) {
+        return watchingSessionRepository.findByWatcherId(watcherId);
+    }
+}
