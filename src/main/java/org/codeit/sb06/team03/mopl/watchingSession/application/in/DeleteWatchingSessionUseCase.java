@@ -6,5 +6,5 @@ public interface DeleteWatchingSessionUseCase {
 
     void deleteByWatcherId(UUID watcherId);
 
-    void deleteByLiveChatIdAndWatcherId(UUID contentId, UUID id);
+    void deleteByLiveChatIdAndWatcherId(UUID liveChatId, UUID id);
 }
