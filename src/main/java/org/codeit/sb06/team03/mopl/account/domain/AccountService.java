@@ -9,6 +9,8 @@ import org.codeit.sb06.team03.mopl.account.domain.vo.Password;
 import org.codeit.sb06.team03.mopl.account.domain.vo.Role;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class AccountService {
@@ -35,7 +37,7 @@ public class AccountService {
         return account.updateLocked(locked);
     }
 
-    public Account resetPassword(Account account) {
+    public Account resetPassword(Optional<Account> account) {
         return account.passwordReset(
                 tempPasswordGenerationPolicy,
                 tempPasswordResetTimeoutPolicy,

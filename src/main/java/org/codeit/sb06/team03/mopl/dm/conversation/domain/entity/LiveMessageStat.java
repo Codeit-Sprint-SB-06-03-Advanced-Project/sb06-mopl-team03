@@ -48,6 +48,10 @@ public class LiveMessageStat {
     @Column(name = "activity", nullable = false)
     private boolean activity;
 
+    @NotNull
+    @Column(name = "has_unread", nullable = false)
+    private boolean hasUnread;
+
     public static LiveMessageStat create(Conversation conversation, UUID accountId) {
         var liveMessageStat = new LiveMessageStat();
         liveMessageStat.id = UUID.randomUUID();
@@ -55,11 +59,22 @@ public class LiveMessageStat {
         liveMessageStat.updatedAt = Instant.now();
         liveMessageStat.accountId = accountId;
         liveMessageStat.activity = false;
+        liveMessageStat.hasUnread = false;
         return liveMessageStat;
     }
 
     public void updateActivity(boolean activity) {
         this.activity = activity;
+        this.updatedAt = Instant.now();
+    }
+
+    public void markAsRead() {
+        this.hasUnread = false;
+        this.updatedAt = Instant.now();
+    }
+
+    public void markAsUnread() {
+        this.hasUnread = true;
         this.updatedAt = Instant.now();
     }
 }

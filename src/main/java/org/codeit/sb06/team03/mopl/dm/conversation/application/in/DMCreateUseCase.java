@@ -4,7 +4,6 @@ import org.codeit.sb06.team03.mopl.dm.conversation.infra.in.ConversationDto;
 
 import java.util.UUID;
 
-public interface DMConnectUseCase {
-
-    ConversationDto connect(UUID userId, DMConnectCommand command);
+public interface DMCreateUseCase {
+    ConversationDto create(UUID userId, DMConnectCommand command);
 }

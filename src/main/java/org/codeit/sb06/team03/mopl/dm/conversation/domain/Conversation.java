@@ -38,24 +38,16 @@ public class Conversation extends AbstractAggregateRoot<Conversation> {
     private short version;
 
     @Embedded
-    private DMUser with;
-
-    @Column(name = "has_unread", nullable = false)
-    private boolean hasUnread;
-
-    @Embedded
     private Message lastestMessage;
 
     @OneToMany(mappedBy = "conversation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "accountId")
     private Map<UUID, LiveMessageStat> liveMessageStats = new HashMap<>();
 
-    public static Conversation create(DMUser with, UUID userId) {
+    public static Conversation create(UUID userId, UUID withUserId) {
         var conversation = new Conversation();
         conversation.id = UUID.randomUUID();
-        conversation.with = with;
-        conversation.hasUnread = false;
-        conversation.addStat(with.userId());
+        conversation.addStat(withUserId);
         conversation.addStat(userId);
         conversation.registerEvent(new ConversationEvent.ConversationConnectedEvent(conversation.id.toString()));
         return conversation;
@@ -65,13 +57,15 @@ public class Conversation extends AbstractAggregateRoot<Conversation> {
         this.lastestMessage = message;
     }
 
-    public void markAsRead() {
-        this.hasUnread = false;
+    public void markAsRead(UUID userId) {
+        LiveMessageStat stat = this.liveMessageStats.get(userId);
+        if (stat != null) stat.markAsRead();
         registerEvent(new ConversationEvent.MessageReadEvent());
     }
 
-    public void markAsUnread() {
-        this.hasUnread = true;
+    public void markAsUnread(UUID receiverId) {
+        LiveMessageStat stat = this.liveMessageStats.get(receiverId);
+        if (stat != null) stat.markAsUnread();
     }
 
     public void addStat(UUID accountId) {
