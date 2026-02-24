@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface LoadContentPort {
 
-    Optional<Content> findById(UUID contentId);
+    Optional<Content> findByIdWithTags(UUID contentId);
 
     List<SessionDetails> findSessionsDetails(WatchingSessionCursorQuery query);
 

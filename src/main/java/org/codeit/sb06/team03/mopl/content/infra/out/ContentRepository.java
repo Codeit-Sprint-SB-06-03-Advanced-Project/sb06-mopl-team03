@@ -10,10 +10,13 @@ import org.codeit.sb06.team03.mopl.common.UserSummary;
 import org.codeit.sb06.team03.mopl.content.Content;
 import org.codeit.sb06.team03.mopl.content.application.out.WatchingSessionCursorQuery;
 import org.codeit.sb06.team03.mopl.content.domain.entity.Tag;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.Nullable;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,14 @@ import static org.codeit.sb06.team03.mopl.user.domain.vo.QTimeoutImage.timeoutIm
 import static org.codeit.sb06.team03.mopl.watchingSession.domain.QWatchingSession.watchingSession;
 
 public interface ContentRepository extends QuerydslJpaRepository<Content, UUID> {
+
+    @Query("""
+            SELECT c
+            FROM Content c
+            LEFT JOIN FETCH c.tags
+            WHERE c.id = :id
+            """)
+    Optional<Content> findByIdWithTags(UUID id);
 
     default List<SessionDetails> findSessionsDetails(WatchingSessionCursorQuery query) {
         OrderSpecifier<Instant> primaryOrder = getPrimaryOrder(query.sortDirection());
@@ -69,10 +80,10 @@ public interface ContentRepository extends QuerydslJpaRepository<Content, UUID> 
                 combineSessionDetails(tuple, tags)).collect(Collectors.toCollection(ArrayList::new));
     }
 
-    default long countByContentIdAndWatcherNameLike(UUID contentId, String watcherNameLike) {
+    default long countByContentIdAndWatcherNameLike(UUID contentId, @Nullable String watcherNameLike) {
         BooleanExpression watcherNameLikeCondition = getWatcherNameLikeCondition(watcherNameLike);
 
-        Long count = select(watchingSession.id.count())
+        Long count = select(watchingSession.count())
                 .from(watchingSession)
                 .innerJoin(profile).on(watchingSession.watcherId.eq(profile.accountId))
                 .where(

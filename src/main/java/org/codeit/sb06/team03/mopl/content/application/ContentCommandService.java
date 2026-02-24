@@ -23,7 +23,7 @@ public class ContentCommandService implements GetContentUseCase {
 
     @Override
     public Content get(UUID contentId) {
-        return loadContentPort.findById(contentId)
+        return loadContentPort.findByIdWithTags(contentId)
                 .orElseThrow(() -> ContentNotFoundException.fromId(contentId));
     }
 
@@ -46,11 +46,13 @@ public class ContentCommandService implements GetContentUseCase {
         List<SessionDetails> sessionsDetails = loadContentPort.findSessionsDetails(query);
 
         boolean hasNext =  sessionsDetails.size() > command.limit();
-        String nextCursor = hasNext ? sessionsDetails.get(command.limit()).createdAt().toString() : null;
-        String nextIdAfter = hasNext ? sessionsDetails.get(command.limit()).id().toString() : null;
         if (hasNext) {
             sessionsDetails.remove(command.limit());
         }
+
+        String nextCursor = hasNext ? sessionsDetails.getLast().createdAt().toString() : null;
+        String nextIdAfter = hasNext ? sessionsDetails.getLast().id().toString() : null;
+
         long totalCount = loadContentPort.countByContentIdAndWatcherNameLike(contentId, command.watcherNameLike());
 
         return new CursorResponseWatchingSessionDto(
