@@ -1,5 +1,6 @@
 package org.codeit.sb06.team03.mopl.playlist.infra.in.response;
 
+import org.codeit.sb06.team03.mopl.playlist.PlaylistReadModel;
 import org.codeit.sb06.team03.mopl.playlist.domain.entity.Playlist;
 
 import java.time.Instant;
@@ -24,6 +25,19 @@ public record PlaylistDto(
                 playlist.getDescription(),
                 playlist.getUpdatedAt(),
                 playlist.getSubscriberCount(),
+                subscribedByMe
+                // contents
+        );
+    }
+
+    public static PlaylistDto toDto(PlaylistReadModel readModel, UserSummaryDto owner, boolean subscribedByMe/*, List<ContentDto> contents*/) {
+        return new PlaylistDto(
+                readModel.id(),
+                owner,
+                readModel.title(),
+                readModel.description(),
+                readModel.updatedAt(),
+                readModel.subscriberCount(),
                 subscribedByMe
                 // contents
         );

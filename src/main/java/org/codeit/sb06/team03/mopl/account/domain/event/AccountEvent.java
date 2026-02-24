@@ -22,6 +22,7 @@ public abstract sealed class AccountEvent {
         private final String expiresAt;
     }
 
+    @Getter
     @RequiredArgsConstructor
     public static final class RoleUpdatedEvent extends AccountEvent {
         private final UUID accountId;

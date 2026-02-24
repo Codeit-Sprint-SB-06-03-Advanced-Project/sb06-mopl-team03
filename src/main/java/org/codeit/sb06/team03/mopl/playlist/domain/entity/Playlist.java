@@ -35,6 +35,10 @@ public class Playlist {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    @Version
+    @Column(name = "version", nullable = false)
+    private short version;
+
     @Column(name = "subscriber_count", nullable = false)
     private long subscriberCount;
 

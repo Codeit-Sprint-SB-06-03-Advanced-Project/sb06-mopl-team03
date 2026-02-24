@@ -1,6 +1,7 @@
 package org.codeit.sb06.team03.mopl.playlist.application;
 
 import lombok.RequiredArgsConstructor;
+import org.codeit.sb06.team03.mopl.account.domain.Account;
 import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidIdentifierException;
 import org.codeit.sb06.team03.mopl.playlist.application.in.*;
 import org.codeit.sb06.team03.mopl.playlist.application.out.*;
@@ -43,22 +44,18 @@ public class PlaylistCommandService implements CreatePlaylistUseCase, UpdatePlay
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
-    public PlaylistDto create(CreatePlaylistCommand command, UUID ownerId) {
+    public Playlist create(CreatePlaylistCommand command, UUID ownerId) {
 
         final String title = command.title();
         final String description = command.description();
 
         Playlist playlist = playlistService.create(title, description, ownerId);
         savePlaylistPort.save(playlist);
-
-        UserSummaryDto owner = getUserSummaryDto(playlist.getOwnerId());
-
-        eventPublisher.publishEvent(new PlaylistEvent.PlaylistCreatedEvent(ownerId)); // TODO 저장?
-        return PlaylistDto.toDto(playlist, owner, false/*, Collections.emptyList()*/);
+        return playlist;
     }
 
     @Override
-    public PlaylistDto update(String playlistId, UpdatePlaylistCommand command, UUID ownerId) {
+    public Playlist update(String playlistId, UpdatePlaylistCommand command, UUID ownerId) {
 
         UUID playlistUUID = parseUUID(playlistId);
         final String title = command.title();
@@ -67,15 +64,13 @@ public class PlaylistCommandService implements CreatePlaylistUseCase, UpdatePlay
         Playlist playlist = loadPlaylistPort.findById(playlistUUID)
                         .orElseThrow(() -> new PlaylistNotFoundException(playlistUUID));
         if (!playlist.getOwnerId().equals(ownerId)) {
-            throw new PlaylistAccessDeniedException(ownerId);
+            throw new PlaylistAccessDeniedException(playlistUUID, ownerId);
         }
 
         playlist = playlistService.update(playlist, title, description);
         savePlaylistPort.save(playlist);
 
-        UserSummaryDto owner = getUserSummaryDto(playlist.getOwnerId());
-//      List<ContentDto> contents = getContents(playlistUUID); // TODO
-        return PlaylistDto.toDto(playlist, owner, false/*, contents*/);
+        return playlist;
     }
 
     @Override
@@ -84,12 +79,10 @@ public class PlaylistCommandService implements CreatePlaylistUseCase, UpdatePlay
         Playlist playlist = loadPlaylistPort.findById(playlistUUID)
                 .orElseThrow(() -> new PlaylistNotFoundException(playlistUUID));
         if (!playlist.getOwnerId().equals(ownerId)) {
-            throw new PlaylistAccessDeniedException(ownerId);
+            throw new PlaylistAccessDeniedException(playlistUUID, ownerId);
         }
         savePlaylistPort.delete(playlistUUID);
-
-        saveSubscriptionPort.deleteAllByPlaylistId(playlistUUID); // TODO 이벤트,비동기?
-        saveCurationPort.deleteAllByPlaylistId(playlistUUID);
+        eventPublisher.publishEvent(new PlaylistEvent.PlaylistDeletedEvent(playlistUUID));
     }
 
     @Override
@@ -101,7 +94,7 @@ public class PlaylistCommandService implements CreatePlaylistUseCase, UpdatePlay
         Playlist playlist = loadPlaylistPort.findById(playlistUUID)
                 .orElseThrow(() -> new PlaylistNotFoundException(playlistUUID));
         if (!playlist.getOwnerId().equals(ownerId)) {
-            throw new PlaylistAccessDeniedException(ownerId);
+            throw new PlaylistAccessDeniedException(playlistUUID, ownerId);
         }
         // TODO loadContentPort.existsById()
 
@@ -115,7 +108,8 @@ public class PlaylistCommandService implements CreatePlaylistUseCase, UpdatePlay
         playlist.increaseContentCount();
         savePlaylistPort.save(playlist);
 
-        eventPublisher.publishEvent(new PlaylistEvent.CurationAddedEvent(playlistUUID));
+        eventPublisher.publishEvent(new PlaylistEvent.CurationAddedEvent(playlist.getId(), playlist.getTitle()));
+        // TODO 컨텐츠 이름도 전달?
     }
 
     @Override
@@ -127,7 +121,7 @@ public class PlaylistCommandService implements CreatePlaylistUseCase, UpdatePlay
         Playlist playlist = loadPlaylistPort.findById(playlistUUID)
                         .orElseThrow(() -> new PlaylistNotFoundException(playlistUUID));
         if (!playlist.getOwnerId().equals(ownerId)) {
-            throw new PlaylistAccessDeniedException(ownerId);
+            throw new PlaylistAccessDeniedException(playlistUUID, ownerId);
         }
 
         CurationId id = new CurationId(playlistUUID, contentUUID);
@@ -146,6 +140,8 @@ public class PlaylistCommandService implements CreatePlaylistUseCase, UpdatePlay
         UUID playlistUUID = parseUUID(playlistId);
         Playlist playlist = loadPlaylistPort.findById(playlistUUID)
                 .orElseThrow(() -> new PlaylistNotFoundException(playlistUUID));
+        Profile subscriber = loadProfilePort.load(userId)
+                .orElseThrow(() -> new ProfileNotFoundException(userId));
 
         SubscriptionId id = new SubscriptionId(playlistUUID, userId);
         if (loadSubscriptionPort.existsById(id)){
@@ -163,7 +159,9 @@ public class PlaylistCommandService implements CreatePlaylistUseCase, UpdatePlay
 
         eventPublisher.publishEvent(new PlaylistEvent.SubscriptionCreatedEvent(
                 playlistUUID,
+                playlist.getTitle(),
                 userId,
+                subscriber.getName(),
                 playlist.getOwnerId()
         ));
     }

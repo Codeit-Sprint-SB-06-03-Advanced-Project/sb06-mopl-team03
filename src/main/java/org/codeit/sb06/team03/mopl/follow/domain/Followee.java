@@ -51,7 +51,7 @@ public class Followee extends AbstractAggregateRoot<Followee> {
         follower.setFollowee(this);
         followers.add(follower);
         followeeCount++;
-        super.registerEvent(new FollowedEvent());
+        super.registerEvent(new FollowedEvent(follower.getFollowee().getId(), followerId));
     }
 
     public void removeFollower(UUID followerId) {

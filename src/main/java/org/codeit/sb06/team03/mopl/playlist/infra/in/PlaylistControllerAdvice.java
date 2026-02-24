@@ -19,7 +19,7 @@ public class PlaylistControllerAdvice {
         log.error(e.getMessage());
         var errorResponse = new ErrorResponse(
                 e.getClass().getSimpleName(),
-                "Playlist를 찾을 수 없습니다.",
+                "플레이리스트를 찾을 수 없습니다.",
                 Collections.emptyList()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
@@ -80,4 +80,14 @@ public class PlaylistControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
+    @ExceptionHandler(PlaylistAccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handlePlaylistAccessDeniedException(PlaylistAccessDeniedException e) {
+        log.error(e.getMessage());
+        var errorResponse = new ErrorResponse(
+                e.getClass().getSimpleName(),
+                "플레이리스트 접근 권한이 없습니다.",
+                Collections.emptyList()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
 }

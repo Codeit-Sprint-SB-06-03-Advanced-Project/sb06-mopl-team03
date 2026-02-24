@@ -1,11 +1,11 @@
 package org.codeit.sb06.team03.mopl.playlist.application.in;
 
-import org.codeit.sb06.team03.mopl.playlist.infra.in.response.PlaylistDto;
+import org.codeit.sb06.team03.mopl.playlist.domain.entity.Playlist;
 
 import java.util.UUID;
 
 public interface UpdatePlaylistUseCase {
 
-    PlaylistDto update(String playlistId, UpdatePlaylistCommand command, UUID ownerId);
+    Playlist update(String playlistId, UpdatePlaylistCommand command, UUID ownerId);
 
 }

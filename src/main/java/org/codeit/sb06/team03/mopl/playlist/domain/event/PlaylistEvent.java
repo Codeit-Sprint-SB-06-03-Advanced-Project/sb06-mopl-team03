@@ -14,13 +14,18 @@ public abstract sealed class PlaylistEvent {
     @RequiredArgsConstructor
     public static final class PlaylistCreatedEvent extends PlaylistEvent {
         private final UUID ownerId;
+        private final String ownerName;
+        private final UUID playlistId;
+        private final String playlistTitle;
     }
 
     @Getter
     @RequiredArgsConstructor
     public static final class SubscriptionCreatedEvent extends PlaylistEvent {
         private final UUID playlistId;
+        private final String playlistTitle;
         private final UUID subscriberId;
+        private final String subscriberName;
         private final UUID ownerId;
     }
 
@@ -28,6 +33,7 @@ public abstract sealed class PlaylistEvent {
     @RequiredArgsConstructor
     public static final class CurationAddedEvent extends PlaylistEvent {
         private final UUID playlistId;
+        private final String playlistTitle;
     }
 
     @Getter

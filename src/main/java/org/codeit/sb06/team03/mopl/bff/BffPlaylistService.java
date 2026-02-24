@@ -12,7 +12,7 @@ public interface BffPlaylistService {
 
     PlaylistDto createPlaylist(PlaylistCreateRequest request, UUID ownerId);
 
-    CursorResponsePlaylistDto getPlaylists(CursorRequestPlaylistDto request);
+    CursorResponsePlaylistDto getPlaylists(CursorRequestPlaylistDto request, UUID viewerId);
 
     PlaylistDto getPlaylist(String playlistId, UUID viewerId);
 

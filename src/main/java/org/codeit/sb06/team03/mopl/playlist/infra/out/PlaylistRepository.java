@@ -3,6 +3,7 @@ package org.codeit.sb06.team03.mopl.playlist.infra.out;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import io.github.openfeign.querydsl.jpa.spring.repository.QuerydslJpaRepository;
+import org.codeit.sb06.team03.mopl.playlist.PlaylistReadModel;
 import org.codeit.sb06.team03.mopl.playlist.domain.entity.Playlist;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -19,7 +20,7 @@ import static org.codeit.sb06.team03.mopl.playlist.domain.entity.QSubscription.s
 
 public interface PlaylistRepository extends QuerydslJpaRepository<Playlist, UUID> {
 
-    default Slice<Playlist> findAll(
+    default Slice<PlaylistReadModel> findAll(
             String keywordLike,
             UUID ownerIdEqual,
             UUID subscriberIdEqual,
@@ -31,12 +32,20 @@ public interface PlaylistRepository extends QuerydslJpaRepository<Playlist, UUID
     ) {
         Predicate[] predicates = {
                 keywordLikePredicate(keywordLike),
-//                ownerIdEqualPredicate(ownerIdEqual),
+                ownerIdEqualPredicate(ownerIdEqual),
                 subscriberIdEqualPredicate(subscriberIdEqual),
                 cursorExpressionPredicate(cursor, idAfter, sortDirection, sortBy)
         };
         sortDirection = sortDirection.equalsIgnoreCase("ASCENDING") ? "ASC" : "DESC";
-        var contents = select(playlist)
+        var contents = select(Projections.constructor(PlaylistReadModel.class,
+                    playlist.id,
+                    playlist.ownerId,
+                    playlist.title,
+                    playlist.description,
+                    playlist.updatedAt,
+                    playlist.subscriberCount,
+                    playlist.contentCount
+                ))
                 .from(playlist)
                 .leftJoin(subscription).on(subscription.id.playlistId.eq(playlist.id))
                 .where(predicates)

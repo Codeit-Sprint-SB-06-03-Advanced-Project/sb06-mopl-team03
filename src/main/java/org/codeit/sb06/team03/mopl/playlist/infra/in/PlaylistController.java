@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/playlists")
@@ -34,9 +36,11 @@ public class PlaylistController implements PlaylistApi {
     @Override
     @GetMapping
     public ResponseEntity<CursorResponsePlaylistDto> getPlaylists(
-            @ModelAttribute CursorRequestPlaylistDto request
+            @ModelAttribute CursorRequestPlaylistDto request,
+            @AuthenticationPrincipal MoplUserDetails user
     ) {
-        CursorResponsePlaylistDto response = bffPlaylistService.getPlaylists(request);
+        UUID userId =  (user != null) ? user.getId() : null;
+        CursorResponsePlaylistDto response = bffPlaylistService.getPlaylists(request, userId);
         return ResponseEntity.ok(response);
     }
 
@@ -46,6 +50,7 @@ public class PlaylistController implements PlaylistApi {
             @PathVariable String playlistId,
             @AuthenticationPrincipal MoplUserDetails user
     ) {
+        UUID userId =  (user != null) ? user.getId() : null;
         PlaylistDto playlistDto = bffPlaylistService.getPlaylist(playlistId, user.getId()); // 조회자 ID
         return ResponseEntity.ok(playlistDto);
     }
