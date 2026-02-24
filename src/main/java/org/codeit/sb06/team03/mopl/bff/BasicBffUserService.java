@@ -89,9 +89,6 @@ public class BasicBffUserService implements BffUserService {
         UserDto userDto = userDetails.getUserDto();
 
         List<WatchingSession> watchingSessions = getWatchingSessionUseCase.get(watcherId);
-        if (watchingSessions.isEmpty()) {
-            return null;
-        }
 
         WatchingSession watchingSession =  watchingSessions.getFirst();
         // liveChatId == contentId 입니다.
