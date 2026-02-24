@@ -1,11 +1,11 @@
 package org.codeit.sb06.team03.mopl.liveChat.application.out;
 
-import org.codeit.sb06.team03.mopl.liveChat.application.out.command.LiveChatMessage;
-import org.codeit.sb06.team03.mopl.liveChat.application.out.command.PresenceMessage;
+import org.codeit.sb06.team03.mopl.liveChat.application.out.query.SendLiveChatMessageQuery;
+import org.codeit.sb06.team03.mopl.liveChat.application.out.query.SendPresenceMessageQuery;
 
 public interface SendMessagePort {
 
-    void broadcastPresenceMessage(PresenceMessage presenceMessage);
+    void broadcastPresenceMessage(SendPresenceMessageQuery sendPresenceMessageQuery);
 
-    void broadcastLiveChatMessage(LiveChatMessage liveChatMessage);
+    void broadcastLiveChatMessage(SendLiveChatMessageQuery sendLiveChatMessageQuery);
 }

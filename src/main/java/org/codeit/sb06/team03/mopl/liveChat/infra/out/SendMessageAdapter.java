@@ -5,8 +5,8 @@ import org.codeit.sb06.team03.mopl.common.ContentResult;
 import org.codeit.sb06.team03.mopl.common.SessionDetails;
 import org.codeit.sb06.team03.mopl.common.UserSummary;
 import org.codeit.sb06.team03.mopl.liveChat.application.out.SendMessagePort;
-import org.codeit.sb06.team03.mopl.liveChat.application.out.command.LiveChatMessage;
-import org.codeit.sb06.team03.mopl.liveChat.application.out.command.PresenceMessage;
+import org.codeit.sb06.team03.mopl.liveChat.application.out.query.SendLiveChatMessageQuery;
+import org.codeit.sb06.team03.mopl.liveChat.application.out.query.SendPresenceMessageQuery;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 
@@ -17,31 +17,31 @@ public class SendMessageAdapter implements SendMessagePort {
     private final SimpMessageSendingOperations messagingTemplate;
 
     @Override
-    public void broadcastPresenceMessage(PresenceMessage presenceMessage) {
-        UserSummary userSummary = presenceMessage.userSummary();
-        ContentResult contentResult = presenceMessage.contentResult();
+    public void broadcastPresenceMessage(SendPresenceMessageQuery sendPresenceMessageQuery) {
+        UserSummary userSummary = sendPresenceMessageQuery.userSummary();
+        ContentResult contentResult = sendPresenceMessageQuery.contentResult();
 
         SessionDetails sessionDetails = new SessionDetails(
-                presenceMessage.watchingSessionId(),
-                presenceMessage.watchingSessionCreatedAt(),
+                sendPresenceMessageQuery.watchingSessionId(),
+                sendPresenceMessageQuery.watchingSessionCreatedAt(),
                 userSummary,
                 contentResult
         );
 
         LiveChatPresenceResponse response = new LiveChatPresenceResponse(
-                presenceMessage.type(),
+                sendPresenceMessageQuery.type(),
                 sessionDetails,
-                presenceMessage.count()
+                sendPresenceMessageQuery.count()
         );
 
-        messagingTemplate.convertAndSend(presenceMessage.destination(), response);
+        messagingTemplate.convertAndSend(sendPresenceMessageQuery.destination(), response);
     }
 
     @Override
-    public void broadcastLiveChatMessage(LiveChatMessage liveChatMessage) {
-        UserSummary userSummary = liveChatMessage.userSummary();
-        String text = liveChatMessage.text();
-        String destination = liveChatMessage.destination();
+    public void broadcastLiveChatMessage(SendLiveChatMessageQuery sendLiveChatMessageQuery) {
+        UserSummary userSummary = sendLiveChatMessageQuery.userSummary();
+        String text = sendLiveChatMessageQuery.text();
+        String destination = sendLiveChatMessageQuery.destination();
 
         LiveChatMessageResponse response = new LiveChatMessageResponse(userSummary, text);
 
