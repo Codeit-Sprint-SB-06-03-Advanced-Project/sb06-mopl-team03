@@ -60,7 +60,7 @@ public class LiveChatCommandService implements
     public void sendLiveChatMessage(SendLiveChatMessageCommand command) {
         UserSummary userSummary = new UserSummary(command.accountId(), command.name(), command.profileImageUrl());
         String text = command.text();
-        SendLiveChatMessageQuery sendLiveChatMessageQuery = new SendLiveChatMessageQuery(userSummary, command.destination(), text);
+        SendLiveChatMessageQuery sendLiveChatMessageQuery = new SendLiveChatMessageQuery(userSummary, text, command.destination());
         sendMessagePort.broadcastLiveChatMessage(sendLiveChatMessageQuery);
     }
 
