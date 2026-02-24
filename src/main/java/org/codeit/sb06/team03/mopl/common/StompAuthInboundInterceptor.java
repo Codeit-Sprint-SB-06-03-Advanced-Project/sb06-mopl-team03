@@ -1,5 +1,6 @@
 package org.codeit.sb06.team03.mopl.common;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.common.security.MoplUserDetails;
 import org.codeit.sb06.team03.mopl.common.security.jwt.JwtClaims;
@@ -49,8 +50,9 @@ public class StompAuthInboundInterceptor implements ChannelInterceptor {
     }
 
     private Message<?> handleConnect(StompHeaderAccessor accessor, Message<?> message) {
-        String accessToken = accessor.getFirstNativeHeader("Authorization");
-        if (!StringUtils.hasText(accessToken) || !jwtRegistry.hasActiveAccessToken(accessToken)) {
+        String accessToken = resolveToken(accessor);
+
+        if (accessToken == null || !jwtRegistry.hasActiveAccessToken(accessToken)) {
             throw new InvalidTokenException();
         }
 
@@ -98,5 +100,13 @@ public class StompAuthInboundInterceptor implements ChannelInterceptor {
         );
 
         return new MoplUserDetails(userDto, null);
+    }
+
+    private String resolveToken(StompHeaderAccessor accessor) {
+        String bearerToken = accessor.getFirstNativeHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }
