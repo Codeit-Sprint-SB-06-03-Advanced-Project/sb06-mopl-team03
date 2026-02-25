@@ -1,4 +1,4 @@
-package org.codeit.sb06.team03.mopl.dm.conversation.infra.in;
+package org.codeit.sb06.team03.mopl.dm.conversation.infra.in.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

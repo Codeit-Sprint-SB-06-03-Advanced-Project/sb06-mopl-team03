@@ -12,7 +12,7 @@ public class SaveConversationAdapter implements SaveConversationPort {
     private final ConversationRepository conversationRepository;
 
     @Override
-    public void save(Conversation conversation) {
-        conversationRepository.save(conversation);
+    public Conversation save(Conversation conversation) {
+        return conversationRepository.save(conversation);
     }
 }

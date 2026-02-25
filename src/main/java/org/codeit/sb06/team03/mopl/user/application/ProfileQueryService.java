@@ -37,4 +37,9 @@ public class ProfileQueryService implements GetProfileUseCase {
     public Map<UUID, UserSummaryDto> getUserSummaries(List<UUID> ids) {
         return loadProfilePort.getUserSummaries(ids);
     }
+
+    @Override
+    public Optional<Profile> getDMUserProfile(UUID userId) {
+        return loadProfilePort.load(userId);
+    }
 }

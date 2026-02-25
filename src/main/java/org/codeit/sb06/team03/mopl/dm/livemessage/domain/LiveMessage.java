@@ -1,11 +1,14 @@
 package org.codeit.sb06.team03.mopl.dm.livemessage.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.codeit.sb06.team03.mopl.dm.livemessage.domain.vo.DMUser;
+import lombok.NoArgsConstructor;
+import org.codeit.sb06.team03.mopl.dm.livemessage.domain.event.LiveMessageEvent;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,7 +16,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.Instant;
 import java.util.UUID;
 
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -28,32 +31,48 @@ public class LiveMessage extends AbstractAggregateRoot<LiveMessage> {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name="userId", column=@Column(name="sender_user_id")),
-            @AttributeOverride(name="name", column=@Column(name="sender_name")),
-            @AttributeOverride(name="profileImageUrl", column=@Column(name="sender_profile_image_url"))
-    })
-    private DMUser sender;
+    @NotNull
+    @Column(name = "conversation_id", nullable = false)
+    private UUID conversationId;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name="userId", column=@Column(name="receiver_user_id")),
-            @AttributeOverride(name="name", column=@Column(name="receiver_name")),
-            @AttributeOverride(name="profileImageUrl", column=@Column(name="receiver_profile_image_url"))
-    })
-    private DMUser receiver;
+    @NotNull
+    @Column(name = "sender_id", nullable = false)
+    private UUID senderId;
+
+    @NotNull
+    @Column(name = "receiver_id", nullable = false)
+    private UUID receiverId;
 
     @NotNull
     @Column(name = "content", length = 1_000, nullable = false)
     private String content;
 
-    public static LiveMessage create(DMUser sender, DMUser receiver, String content) {
+    @NotNull
+    @Column(name = "has_unread", nullable = false)
+    private boolean hasUnread;
+
+    public static LiveMessage create(UUID conversationId, UUID senderId, UUID receiverId, String content) {
         var liveMessage = new LiveMessage();
         liveMessage.id = UUID.randomUUID();
-        liveMessage.sender = sender;
-        liveMessage.receiver = receiver;
+        liveMessage.createdAt = Instant.now();
+        liveMessage.conversationId = conversationId;
+        liveMessage.senderId = senderId;
+        liveMessage.receiverId = receiverId;
         liveMessage.content = content;
+        liveMessage.hasUnread = true;
+        liveMessage.registerEvent(new LiveMessageEvent.MessageSentEvent(liveMessage.id, conversationId, senderId, receiverId, content, liveMessage.createdAt));
         return liveMessage;
+    }
+
+    public void markAsRead() {
+        this.hasUnread = false;
+    }
+
+    public void receive() {
+        this.registerEvent(new LiveMessageEvent.MessageReceivedEvent(this.id, this.conversationId, this.senderId, this.receiverId));
+    }
+
+    public void pass() {
+        this.registerEvent(new LiveMessageEvent.MessagePassedEvent(this.id, this.conversationId, this.receiverId, this.content));
     }
 }

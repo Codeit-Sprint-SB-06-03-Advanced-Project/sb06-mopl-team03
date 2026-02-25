@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.codeit.sb06.team03.mopl.dm.conversation.domain.entity.LiveMessageStat;
 import org.codeit.sb06.team03.mopl.dm.conversation.domain.event.ConversationEvent;
-import org.codeit.sb06.team03.mopl.dm.conversation.domain.vo.DMUser;
-import org.codeit.sb06.team03.mopl.dm.conversation.domain.vo.Message;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -37,9 +35,6 @@ public class Conversation extends AbstractAggregateRoot<Conversation> {
     @Column(name = "version", nullable = false)
     private short version;
 
-    @Embedded
-    private Message lastestMessage;
-
     @OneToMany(mappedBy = "conversation", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKey(name = "accountId")
     private Map<UUID, LiveMessageStat> liveMessageStats = new HashMap<>();
@@ -49,26 +44,47 @@ public class Conversation extends AbstractAggregateRoot<Conversation> {
         conversation.id = UUID.randomUUID();
         conversation.addStat(withUserId);
         conversation.addStat(userId);
-        conversation.registerEvent(new ConversationEvent.ConversationConnectedEvent(conversation.id.toString()));
+        conversation.registerEvent(new ConversationEvent.ConversationCreatedEvent(conversation.id, userId, withUserId));
         return conversation;
     }
 
-    public void updateLastestMessage(Message message) {
-        this.lastestMessage = message;
+    public void joinLiveMessage(UUID userId) {
+        LiveMessageStat stat = this.liveMessageStats.get(userId);
+        if (stat != null) {
+            stat.updateActivity(true);
+            registerEvent(new ConversationEvent.LiveMessageJoinedEvent(this.id, userId));
+        }
+    }
+
+    public void leaveLiveMessage(UUID userId) {
+        LiveMessageStat stat = this.liveMessageStats.get(userId);
+        if (stat != null) {
+            stat.updateActivity(false);
+            registerEvent(new ConversationEvent.LiveMessageLeavedEvent(this.id, userId));
+        }
     }
 
     public void markAsRead(UUID userId) {
         LiveMessageStat stat = this.liveMessageStats.get(userId);
-        if (stat != null) stat.markAsRead();
-        registerEvent(new ConversationEvent.MessageReadEvent());
+        if (stat != null) {
+            stat.markAsRead();
+            registerEvent(new ConversationEvent.MessageReadedEvent(this.id, userId));
+        }
     }
 
-    public void markAsUnread(UUID receiverId) {
-        LiveMessageStat stat = this.liveMessageStats.get(receiverId);
-        if (stat != null) stat.markAsUnread();
+    public boolean isActive(UUID userId) {
+        LiveMessageStat stat = this.liveMessageStats.get(userId);
+        return stat != null && stat.isActivity();
     }
 
-    public void addStat(UUID accountId) {
+    public UUID getOtherParticipant(UUID requesterId) {
+        return this.liveMessageStats.keySet().stream()
+                .filter(id -> !id.equals(requesterId))
+                .findFirst()
+                .orElseThrow();
+    }
+
+    private void addStat(UUID accountId) {
         this.liveMessageStats.put(accountId, LiveMessageStat.create(this, accountId));
     }
 }

@@ -17,8 +17,9 @@ public class LoadConversationAdapter implements LoadConversationPort {
     private final ConversationRepository conversationRepository;
 
     @Override
-    public List<Conversation> findAll(UUID userId, CursorRequestConversationDto request) {
-        return conversationRepository.findAll(userId, request);
+    public List<Conversation> findAll(UUID userId, String cursor, String idAfter,
+                                      int limit, boolean ascending, String sortBy) {
+        return conversationRepository.findAll(userId, cursor, idAfter, limit, ascending, sortBy);
     }
 
     @Override
@@ -27,17 +28,12 @@ public class LoadConversationAdapter implements LoadConversationPort {
     }
 
     @Override
-    public Optional<Conversation> findById(UUID userId, UUID conversationId) {
-        return conversationRepository.findById(userId, conversationId);
+    public Optional<Conversation> findById(UUID conversationId) {
+        return conversationRepository.findConversationById(conversationId);
     }
 
     @Override
-    public Optional<Conversation> findEntityById(UUID conversationId) {
-        return conversationRepository.findEntityById(conversationId);
-    }
-
-    @Override
-    public Optional<Conversation> findByWith(UUID userId, UUID withUserId) {
-        return conversationRepository.findByWith(userId, withUserId);
+    public Optional<Conversation> findByParticipants(UUID userId, UUID withUserId) {
+        return conversationRepository.findByParticipants(userId, withUserId);
     }
 }

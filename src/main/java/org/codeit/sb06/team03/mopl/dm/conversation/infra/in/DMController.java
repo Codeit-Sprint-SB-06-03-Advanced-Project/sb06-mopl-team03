@@ -1,9 +1,9 @@
 package org.codeit.sb06.team03.mopl.dm.conversation.infra.in;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.bff.BffDMService;
+import org.codeit.sb06.team03.mopl.dm.conversation.infra.in.request.ConversationCreateRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

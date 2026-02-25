@@ -17,7 +17,7 @@ public class LoadDMUserAdapter implements LoadDMUserPort {
 
     @Override
     public DMUser findByUserId(UUID userId) {
-        Profile profile = getProfileUseCase.get(userId);
-        return new DMUser(userId, profile.getName(), profile.getTimeoutImage().getPresignedUrl());
+        Profile profile = getProfileUseCase.getDMUserProfile(userId).orElseThrow();
+        return new DMUser(userId, profile.getName(), profile.getTimeoutImage().getPresignedUrl() != null ? profile.getTimeoutImage().getPresignedUrl() : null);
     }
 }

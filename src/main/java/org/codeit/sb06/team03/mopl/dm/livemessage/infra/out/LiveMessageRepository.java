@@ -8,55 +8,70 @@ import org.codeit.sb06.team03.mopl.dm.livemessage.domain.QLiveMessage;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface LiveMessageRepository extends QuerydslJpaRepository<LiveMessage, UUID> {
 
-    default List<LiveMessage> findAll(UUID aUserId, UUID bUserId,
-                                      CursorRequestDirectMessageDto request) {
+    default List<LiveMessage> findAll(
+            UUID conversationId,
+            String cursor,
+            String idAfter,
+            int limit,
+            boolean ascending,
+            String sortBy
+    ) {
         QLiveMessage m = QLiveMessage.liveMessage;
-        boolean isAsc = "ASCENDING".equals(request.sortDirection());
 
-        BooleanExpression pair =
-                m.sender.userId.eq(aUserId).and(m.receiver.userId.eq(bUserId))
-                        .or(m.sender.userId.eq(bUserId).and(m.receiver.userId.eq(aUserId)));
-
-        BooleanExpression cursor = buildCursorCondition(m, request, isAsc);
-        BooleanExpression where = cursor != null ? pair.and(cursor) : pair;
+        BooleanExpression where = m.conversationId.eq(conversationId);
+        BooleanExpression cursorCond = buildCursorCondition(m, cursor, idAfter, ascending);
+        if (cursorCond != null) where = where.and(cursorCond);
 
         return select(m).from(m)
                 .where(where)
-                .orderBy(isAsc ? m.createdAt.asc() : m.createdAt.desc(),
-                        isAsc ? m.id.asc()        : m.id.desc())
-                .limit(request.limit() + 1L)
+                .orderBy(ascending ? m.createdAt.asc() : m.createdAt.desc(),
+                        ascending ? m.id.asc() : m.id.desc())
+                .limit(limit)
                 .fetch();
     }
 
-    default long countAll(UUID aUserId, UUID bUserId) {
+    default long count(UUID conversationId) {
         QLiveMessage m = QLiveMessage.liveMessage;
-        BooleanExpression pair =
-                m.sender.userId.eq(aUserId).and(m.receiver.userId.eq(bUserId))
-                        .or(m.sender.userId.eq(bUserId).and(m.receiver.userId.eq(aUserId)));
-        Long result = select(m.count()).from(m).where(pair).fetchOne();
+        Long result = select(m.count()).from(m)
+                .where(m.conversationId.eq(conversationId))
+                .fetchOne();
         return result == null ? 0L : result;
     }
 
-    private BooleanExpression buildCursorCondition(QLiveMessage m,
-                                                   CursorRequestDirectMessageDto request,
-                                                   boolean isAsc) {
-        if (request.cursor() == null) return null;
-        Instant cursorTime = Instant.parse(request.cursor());
-        UUID idAfter = request.idAfter() == null ? null : UUID.fromString(request.idAfter());
+    default Optional<LiveMessage> findLatestByConversationId(UUID conversationId) {
+        QLiveMessage m = QLiveMessage.liveMessage;
+        return Optional.ofNullable(
+                select(m).from(m)
+                        .where(m.conversationId.eq(conversationId))
+                        .orderBy(m.createdAt.desc(), m.id.desc())
+                        .fetchFirst()
+        );
+    }
+
+    private BooleanExpression buildCursorCondition(
+            QLiveMessage m,
+            String cursor,
+            String idAfter,
+            boolean isAsc
+    ) {
+        if (cursor == null) return null;
+        Instant cursorTime = Instant.parse(cursor);
+        UUID idAfterUuid = idAfter == null ? null : UUID.fromString(idAfter);
 
         if (isAsc) {
             BooleanExpression cond = m.createdAt.gt(cursorTime);
-            if (idAfter != null)
-                cond = cond.or(m.createdAt.eq(cursorTime).and(m.id.gt(idAfter)));
+            if (idAfterUuid != null)
+                cond = cond.or(m.createdAt.eq(cursorTime).and(m.id.gt(idAfterUuid)));
             return cond;
         } else {
             BooleanExpression cond = m.createdAt.lt(cursorTime);
-            if (idAfter != null)
-                cond = cond.or(m.createdAt.eq(cursorTime).and(m.id.lt(idAfter)));
+            if (idAfterUuid != null)
+                cond = cond.or(m.createdAt.eq(cursorTime).and(m.id.lt(idAfterUuid)));
             return cond;
         }
     }

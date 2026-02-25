@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public interface ConversationRepository extends QuerydslJpaRepository<Conversation, UUID> {
 
-    default Optional<Conversation> findByWith(UUID userId, UUID withUserId) {
+    default Optional<Conversation> findByParticipants(UUID userId, UUID withUserId) {
         QConversation conv = QConversation.conversation;
         QLiveMessageStat statA = new QLiveMessageStat("statA");
         QLiveMessageStat statB = new QLiveMessageStat("statB");
@@ -27,19 +27,19 @@ public interface ConversationRepository extends QuerydslJpaRepository<Conversati
         );
     }
 
-    default List<Conversation> findAll(UUID userId, CursorRequestConversationDto request) {
+    default List<Conversation> findAll(UUID userId, String cursor, String idAfter,
+                                       int limit, boolean ascending, String sortBy) {
         QConversation conv = QConversation.conversation;
         QLiveMessageStat stat = QLiveMessageStat.liveMessageStat;
-        boolean isAsc = "ASCENDING".equals(request.sortDirection());
 
-        BooleanExpression cursor = buildCursorCondition(conv, request, isAsc);
+        BooleanExpression cursorCond = buildCursorCondition(conv, cursor, idAfter, ascending);
 
         return select(conv).from(conv)
                 .join(stat).on(stat.conversation.eq(conv).and(stat.accountId.eq(userId)))
-                .where(cursor)
-                .orderBy(isAsc ? conv.createdAt.asc() : conv.createdAt.desc(),
-                        isAsc ? conv.id.asc() : conv.id.desc())
-                .limit(request.limit() + 1L)
+                .where(cursorCond)
+                .orderBy(ascending ? conv.createdAt.asc() : conv.createdAt.desc(),
+                        ascending ? conv.id.asc() : conv.id.desc())
+                .limit(limit)
                 .fetch();
     }
 
@@ -52,19 +52,7 @@ public interface ConversationRepository extends QuerydslJpaRepository<Conversati
         return result == null ? 0L : result;
     }
 
-    default Optional<Conversation> findById(UUID userId, UUID conversationId) {
-        QConversation conv = QConversation.conversation;
-        QLiveMessageStat stat = QLiveMessageStat.liveMessageStat;
-
-        return Optional.ofNullable(
-                select(conv).from(conv)
-                        .join(stat).on(stat.conversation.eq(conv).and(stat.accountId.eq(userId)))
-                        .where(conv.id.eq(conversationId))
-                        .fetchFirst()
-        );
-    }
-
-    default Optional<Conversation> findEntityById(UUID conversationId) {
+    default Optional<Conversation> findConversationById(UUID conversationId) {
         QConversation conv = QConversation.conversation;
         return Optional.ofNullable(
                 select(conv).from(conv)
@@ -73,24 +61,22 @@ public interface ConversationRepository extends QuerydslJpaRepository<Conversati
         );
     }
 
-    private BooleanExpression buildCursorCondition(
-            QConversation conv,
-            CursorRequestConversationDto request,
-            boolean isAsc
-    ) {
-        if (request.cursor() == null) return null;
-        Instant cursorTime = Instant.parse(request.cursor());
-        UUID idAfter = request.idAfter() == null ? null : UUID.fromString(request.idAfter());
+    private BooleanExpression buildCursorCondition(QConversation conv,
+                                                   String cursor, String idAfter,
+                                                   boolean isAsc) {
+        if (cursor == null) return null;
+        Instant cursorTime = Instant.parse(cursor);
+        UUID idAfterUuid = idAfter == null ? null : UUID.fromString(idAfter);
 
         if (isAsc) {
             BooleanExpression condition = conv.createdAt.gt(cursorTime);
-            if (idAfter != null)
-                condition = condition.or(conv.createdAt.eq(cursorTime).and(conv.id.gt(idAfter)));
+            if (idAfterUuid != null)
+                condition = condition.or(conv.createdAt.eq(cursorTime).and(conv.id.gt(idAfterUuid)));
             return condition;
         } else {
             BooleanExpression condition = conv.createdAt.lt(cursorTime);
-            if (idAfter != null)
-                condition = condition.or(conv.createdAt.eq(cursorTime).and(conv.id.lt(idAfter)));
+            if (idAfterUuid != null)
+                condition = condition.or(conv.createdAt.eq(cursorTime).and(conv.id.lt(idAfterUuid)));
             return condition;
         }
     }
