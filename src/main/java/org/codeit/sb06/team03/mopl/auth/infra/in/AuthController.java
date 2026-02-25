@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.bff.BffAuthService;
 import org.codeit.sb06.team03.mopl.common.security.jwt.*;
+import org.codeit.sb06.team03.mopl.common.security.jwt.exception.InvalidTokenException;
 import org.codeit.sb06.team03.mopl.common.security.jwt.registry.JwtRegistry;
 import org.codeit.sb06.team03.mopl.user.infra.in.UserDto;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,10 @@ public class AuthController implements AuthApi{
     @PostMapping("/refresh")
     public ResponseEntity<JwtDto> refresh(HttpServletRequest request, HttpServletResponse response) {
         Cookie oldRefreshTokenCookie =  cookieProvider.resolveCookie(request);
+        if (oldRefreshTokenCookie == null) {
+            throw new InvalidTokenException();
+        }
+
         TokenPair tokenPair = jwtRegistry.rotate(oldRefreshTokenCookie.getValue());
 
         Cookie newRefreshTokenCookie = cookieProvider.generateRefreshTokenCookie(tokenPair.refreshToken());

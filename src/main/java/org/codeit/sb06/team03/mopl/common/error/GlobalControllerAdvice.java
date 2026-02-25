@@ -1,11 +1,14 @@
 package org.codeit.sb06.team03.mopl.common.error;
 
+import org.codeit.sb06.team03.mopl.common.security.jwt.exception.InvalidTokenException;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -56,5 +59,16 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
         );
 
         return ResponseEntity.status(status).body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTokenException(InvalidTokenException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getClass().getSimpleName(),
+                e.getMessage(),
+                List.of()
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 }
