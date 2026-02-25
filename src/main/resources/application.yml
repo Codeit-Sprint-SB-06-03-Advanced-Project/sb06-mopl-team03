@@ -2,6 +2,49 @@ spring:
   application:
     name: mopl
   profiles:
-    active: dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   jpa:
     open-in-view: false
+  mail:
+    host: ${mopl.mail.host}
+    port: ${mopl.mail.port}
+    username: ${mopl.mail.username}
+    password: ${mopl.mail.password}
+    properties:
+      mail:
+        smtp:
+          auth: ${mopl.mail.properties.mail.smtp.auth}
+          starttls:
+            enable: ${mopl.mail.properties.mail.smtp.starttls.enable}
+
+mopl:
+  account:
+    password-policy: "no"
+    temp-password-policy: "fixed"
+    temp-password-reset-timeout-policy-in-minutes: 3
+  mail:
+    host: "smtp.gmail.com"
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  storage:
+    aws-s3:
+      region: "ap-northeast-2"
+      bucket-name: "sb06-part3-team3-post-image"
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+      signature-duration-in-hours: 1
+  jwt:
+    access-token:
+      secret: ${JWT_ACCESS_TOKEN_SECRET:sb06-mopl-team03-jwt-temporary-secret}
+      expiration-ms: ${ACCESS_TOKEN_EXPIRATION_MS:300000}
+    refresh-token:
+      secret: ${JWT_REFRESH_TOKEN_SECRET:sb06-mopl-team03-jwt-temporary-secret}
+      expiration-ms: ${REFRESH_TOKEN_EXPIRATION_MS:604800000}
+    max-session: ${JWT_MAX_SESSION:1}
