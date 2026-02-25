@@ -9,9 +9,11 @@ import java.util.regex.Pattern;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DestinationUtils {
 
-    private static final Pattern liveChatSubDestinationPattern =
+    private static final Pattern liveChatWatchSubDestinationPattern =
             Pattern.compile("^/sub/contents/[0-9a-zA-Z-]+/watch$");
-    private static final Pattern liveChatSendRequestDestinationPattern =
+    private static final Pattern liveChatSubDestinationPattern =
+            Pattern.compile("^/sub/contents/[0-9a-zA-Z-]+/chat$");
+    private static final Pattern liveChatPubDestinationPattern =
             Pattern.compile("^/pub/contents/[0-9a-zA-Z-]+/chat$");
 
     public static final String liveChatSendResponseDestinationFormat = "/sub/contents/%s/chat";
@@ -24,12 +26,16 @@ public class DestinationUtils {
         return parts[3];
     }
 
-    public static boolean matchSubDestination(String destination) {
+    public static boolean matchWatchSubDestination(String destination) {
+        return liveChatWatchSubDestinationPattern.matcher(destination).matches();
+    }
+
+    public static boolean matchChatSubDestination(String destination) {
         return liveChatSubDestinationPattern.matcher(destination).matches();
     }
 
-    public static boolean matchSendRequestDestination(String destination) {
-        return liveChatSendRequestDestinationPattern.matcher(destination).matches();
+    public static boolean matchPubDestination(String destination) {
+        return liveChatPubDestinationPattern.matcher(destination).matches();
     }
 
     public static boolean isContentDestination(String destination) {

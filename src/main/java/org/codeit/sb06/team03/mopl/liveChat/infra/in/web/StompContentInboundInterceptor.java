@@ -42,7 +42,7 @@ public class StompContentInboundInterceptor implements ChannelInterceptor {
 
         }
         if (DestinationUtils.isContentDestination(destination)) {
-            if (!DestinationUtils.matchSendRequestDestination(destination)) {
+            if (!DestinationUtils.matchPubDestination(destination)) {
                 throw new SecurityException("잘못된 전송 경로 입니다.");
             }
         }
@@ -55,11 +55,11 @@ public class StompContentInboundInterceptor implements ChannelInterceptor {
 
         if (destination == null) {
             throw new SecurityException("잘못된 구독 경로 입니다.");
-
         }
 
         if (DestinationUtils.isContentDestination(destination)) {
-            if (!DestinationUtils.matchSubDestination(destination)) {
+            if (!DestinationUtils.matchWatchSubDestination(destination) &&
+            !DestinationUtils.matchChatSubDestination(destination)) {
                 throw new SecurityException("잘못된 구독 경로 입니다.");
             }
         }
