@@ -17,6 +17,7 @@ import org.codeit.sb06.team03.mopl.user.infra.ProfileMapper;
 import org.codeit.sb06.team03.mopl.user.infra.in.*;
 import org.codeit.sb06.team03.mopl.watchingSession.application.in.GetWatchingSessionUseCase;
 import org.codeit.sb06.team03.mopl.watchingSession.domain.WatchingSession;
+import org.codeit.sb06.team03.mopl.watchingSession.domain.exception.WatchingSessionNotFoundException;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,6 +90,9 @@ public class BasicBffUserService implements BffUserService {
         UserDto userDto = userDetails.getUserDto();
 
         List<WatchingSession> watchingSessions = getWatchingSessionUseCase.get(watcherId);
+        if  (watchingSessions.isEmpty()) {
+            throw WatchingSessionNotFoundException.fromWatcherId(watcherId);
+        }
 
         WatchingSession watchingSession =  watchingSessions.getFirst();
         // liveChatId == contentId 입니다.

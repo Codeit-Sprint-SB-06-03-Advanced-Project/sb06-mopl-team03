@@ -55,12 +55,7 @@ public class WatchingSessionCommandService implements
 
     @Override
     public List<WatchingSession> get(UUID watcherId) {
-        List<WatchingSession> watchingSessions = loadWatchingSessionPort.findByWatcherId(watcherId);
-        if (watchingSessions.isEmpty()) {
-            throw WatchingSessionNotFoundException.fromWatcherId(watcherId);
-        }
-
-        return watchingSessions;
+        return loadWatchingSessionPort.findByWatcherId(watcherId);
     }
 
     @Override

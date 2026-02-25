@@ -41,7 +41,7 @@ public class LiveChatWebEventListener {
         }
 
         String destination = accessor.getDestination();
-        if (destination == null || !DestinationUtils.matchSubDestination(destination)) {
+        if (destination == null || !DestinationUtils.matchWatchSubDestination(destination)) {
             return; // null 가능성 없음
         }
 
@@ -82,9 +82,12 @@ public class LiveChatWebEventListener {
         }
 
         String destination = (String) accessor.getSessionAttributes().get(accessor.getSubscriptionId());
-        if (destination == null || !DestinationUtils.matchSubDestination(destination)) {
+
+        if (destination == null || !DestinationUtils.matchWatchSubDestination(destination)) {
             return;
         }
+
+        accessor.getSessionAttributes().remove(accessor.getSubscriptionId());
 
         if (event.getUser() == null) {
             return; // null 가능성 없음
@@ -134,7 +137,7 @@ public class LiveChatWebEventListener {
 
         List<String> destinations = accessor.getSessionAttributes().values()
                 .stream().map(value -> (String) value)
-                .filter(DestinationUtils::matchSubDestination)
+                .filter(DestinationUtils::matchWatchSubDestination)
                 .toList();
 
         if (destinations.isEmpty()) {
@@ -144,6 +147,7 @@ public class LiveChatWebEventListener {
         List<WatchingSession> watchingSessions = getWatchingSessionUseCase.get(userDto.id());
         deleteWatchingSessionUseCase.deleteByWatcherId(userDto.id());
 
+        // FIXME: 보완 필요
         destinations.forEach(destination -> {
             UUID contentId = UUID.fromString(DestinationUtils.extractContentId(destination));
             UUID liveChatId = contentId;
