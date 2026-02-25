@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.codeit.sb06.team03.mopl.common.SessionDetails;
 import org.codeit.sb06.team03.mopl.common.error.ErrorResponse;
+import org.codeit.sb06.team03.mopl.common.security.MoplUserDetails;
 import org.hibernate.validator.constraints.UUID;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
@@ -63,5 +65,16 @@ public interface UserApi {
             @UUID String userId,
             @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE)) @Valid UserUpdateRequest request,
             @Nullable MultipartFile image
+    );
+
+    @Operation(summary = "특정 사용자의 시청 세션 조회 (nullable)")
+    @ApiResponse(responseCode = "200", description = "성공")
+    @ApiResponse(responseCode = "400", description = "잘못된 요청")
+    @ApiResponse(responseCode = "401", description = "인증 오류")
+    @ApiResponse(responseCode = "500", description = "서버 오류")
+    ResponseEntity<SessionDetails> getSessionDetails (
+            @UUID(message = "잘못된 UUID 형식입니다.")
+            String WatcherId,
+            MoplUserDetails userDetails
     );
 }

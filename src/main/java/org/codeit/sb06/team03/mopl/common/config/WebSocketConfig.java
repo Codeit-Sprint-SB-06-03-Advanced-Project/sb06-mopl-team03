@@ -1,6 +1,9 @@
 package org.codeit.sb06.team03.mopl.common.config;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.codeit.sb06.team03.mopl.common.StompAuthInboundInterceptor;
+import org.codeit.sb06.team03.mopl.liveChat.infra.in.web.StompContentInboundInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -16,7 +19,11 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
+@RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    private final StompAuthInboundInterceptor stompAuthInboundInterceptor;
+    private final StompContentInboundInterceptor stompContentInboundInterceptor;
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
@@ -37,7 +44,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.executor(websocketInboundExecutor());
+        registration.executor(websocketInboundExecutor())
+                .interceptors(stompAuthInboundInterceptor, stompContentInboundInterceptor);
     }
 
     @Override
