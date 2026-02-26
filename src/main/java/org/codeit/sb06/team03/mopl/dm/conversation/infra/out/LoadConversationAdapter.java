@@ -6,9 +6,8 @@ import org.codeit.sb06.team03.mopl.dm.conversation.domain.Conversation;
 import org.codeit.sb06.team03.mopl.dm.conversation.infra.in.CursorRequestConversationDto;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
@@ -17,9 +16,27 @@ public class LoadConversationAdapter implements LoadConversationPort {
     private final ConversationRepository conversationRepository;
 
     @Override
-    public List<Conversation> findAll(UUID userId, String cursor, String idAfter,
-                                      int limit, boolean ascending, String sortBy) {
-        return conversationRepository.findAll(userId, cursor, idAfter, limit, ascending, sortBy);
+    public List<Conversation> findAll(
+            UUID userId,
+            String cursor,
+            String idAfter,
+            int limit,
+            boolean ascending,
+            String sortBy
+    ) {
+        List<UUID> ids = conversationRepository.findAllIds(userId, cursor, idAfter, limit + 1, ascending, sortBy);
+        if (ids.isEmpty()) {
+            return List.of();
+        }
+
+        List<Conversation> conversations = conversationRepository.findAllByIds(ids);
+
+        Map<UUID, Conversation> map = conversations.stream()
+                .collect(Collectors.toMap(Conversation::getId, c -> c));
+        return ids.stream()
+                .map(map::get)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     @Override

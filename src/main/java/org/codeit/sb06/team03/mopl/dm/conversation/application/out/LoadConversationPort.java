@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface LoadConversationPort {
+
     List<Conversation> findAll(
             UUID userId,
             String cursor,

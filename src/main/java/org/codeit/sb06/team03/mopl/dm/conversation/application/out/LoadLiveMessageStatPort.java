@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface LoadLiveMessageStatPort {
+
     boolean isActive(UUID conversationId, UUID accountId);
+
     List<UUID> findConversationIdsByAccountId(UUID accountId);
 }

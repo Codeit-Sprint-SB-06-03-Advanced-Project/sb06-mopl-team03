@@ -46,6 +46,15 @@ public class ConversationCommandService implements CreateConversationUseCase, Me
     }
 
     @Override
+    public void markAsUnread(UUID conversationId, UUID receiverId) {
+        Conversation conversation = loadConversationPort.findById(conversationId)
+                .orElseThrow(() -> new ConversationNotFoundException(conversationId));
+
+        conversation.markAsUnread(receiverId);
+        saveConversationPort.save(conversation);
+    }
+
+    @Override
     public void join(LiveMessageJoinCommand command) {
         Conversation conversation = loadConversationPort.findById(command.conversationId())
                 .orElseThrow(() -> new ConversationNotFoundException(command.conversationId()));

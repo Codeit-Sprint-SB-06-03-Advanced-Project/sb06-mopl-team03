@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface LoadLiveMessagePort {
+
     List<LiveMessage> findAll(
             UUID conversationId,
             String cursor,

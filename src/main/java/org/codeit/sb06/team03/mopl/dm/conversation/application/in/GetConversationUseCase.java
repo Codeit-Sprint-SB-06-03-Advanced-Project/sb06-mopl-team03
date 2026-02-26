@@ -21,4 +21,6 @@ public interface GetConversationUseCase {
     Conversation findById(UUID userId, UUID conversationId);
 
     Conversation findByWith(UUID userId, UUID withUserId);
+
+    boolean isParticipantActive(UUID userId, UUID conversationId);
 }

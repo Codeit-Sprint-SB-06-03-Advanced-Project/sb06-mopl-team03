@@ -72,6 +72,13 @@ public class Conversation extends AbstractAggregateRoot<Conversation> {
         }
     }
 
+    public void markAsUnread(UUID userId) {
+        LiveMessageStat stat = this.liveMessageStats.get(userId);
+        if (stat != null) {
+            stat.markAsUnread();
+        }
+    }
+
     public boolean isActive(UUID userId) {
         LiveMessageStat stat = this.liveMessageStats.get(userId);
         return stat != null && stat.isActivity();

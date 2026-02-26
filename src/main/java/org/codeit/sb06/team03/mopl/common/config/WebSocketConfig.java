@@ -6,6 +6,7 @@ import org.codeit.sb06.team03.mopl.common.StompAuthInboundInterceptor;
 import org.codeit.sb06.team03.mopl.liveChat.infra.in.web.StompContentInboundInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -64,6 +65,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         scheduler.setErrorHandler(t -> log.error("websocketTaskScheduler error: {}", t.getMessage()));
         scheduler.initialize();
         return scheduler;
+    }
+
+    @Bean("taskExecutor")
+    @Primary
+    public TaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(8);
+        executor.setMaxPoolSize(16);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("default-async-");
+        executor.setWaitForTasksToCompleteOnShutdown(true);
+        executor.setAwaitTerminationSeconds(30);
+        executor.initialize();
+        return executor;
     }
 
     @Bean("websocketInboundExecutor")

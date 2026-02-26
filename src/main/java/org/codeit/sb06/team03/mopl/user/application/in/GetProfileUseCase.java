@@ -19,7 +19,6 @@ public interface GetProfileUseCase {
 
     List<Profile> load(List<UUID> accountIds);
 
-
     Optional<UserSummaryDto> getUserSummary(UUID id);
 
     Map<UUID, UserSummaryDto> getUserSummaries(List<UUID> ids);

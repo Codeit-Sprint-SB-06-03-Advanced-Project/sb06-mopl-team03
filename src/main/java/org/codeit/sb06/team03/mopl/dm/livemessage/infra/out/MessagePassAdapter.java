@@ -1,7 +1,6 @@
 package org.codeit.sb06.team03.mopl.dm.livemessage.infra.out;
 
 import lombok.RequiredArgsConstructor;
-import org.codeit.sb06.team03.mopl.dm.conversation.application.out.LoadDMUserPort;
 import org.codeit.sb06.team03.mopl.dm.conversation.domain.vo.DMUser;
 import org.codeit.sb06.team03.mopl.dm.conversation.infra.in.DMUserDto;
 import org.codeit.sb06.team03.mopl.dm.conversation.infra.in.DirectMessageDto;
@@ -17,13 +16,9 @@ import java.util.UUID;
 public class MessagePassAdapter implements MessagePassPort{
 
     private final SimpMessageSendingOperations messagingTemplate;
-    private final LoadDMUserPort loadDMUserPort;
 
     @Override
-    public void pass(UUID conversationId, UUID receiverId, UUID messageId, UUID senderId, String content, Instant createdAt) {
-        DMUser sender = loadDMUserPort.findByUserId(senderId);
-        DMUser receiver = loadDMUserPort.findByUserId(receiverId);
-
+    public void pass(UUID conversationId, UUID messageId, String content, Instant createdAt, DMUser sender, DMUser receiver) {
         DirectMessageDto dto = new DirectMessageDto(
                 messageId.toString(),
                 conversationId.toString(),
@@ -32,8 +27,7 @@ public class MessagePassAdapter implements MessagePassPort{
                 DMUserDto.from(receiver),
                 content
         );
-
-        String destination = "/sub/conversations/" + conversationId;
+        String destination = "/sub/conversations/" + conversationId + "/direct-messages";
         messagingTemplate.convertAndSend(destination, dto);
     }
 }

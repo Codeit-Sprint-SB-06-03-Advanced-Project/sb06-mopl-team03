@@ -24,16 +24,14 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class DMWebSocketEventListener {
 
-    private static final Pattern DM_SUB_PATTERN =
-            Pattern.compile("^/sub/conversations/[0-9a-fA-F-]+$");
+    private static final Pattern DM_SUB_PATTERN = Pattern.compile("^/sub/conversations/[0-9a-fA-F-]+/direct-messages$");
 
     private final LiveMessageJoinUseCase liveMessageJoinUseCase;
     private final LiveMessageLeaveUseCase liveMessageLeaveUseCase;
 
     @EventListener
     void onSubscribe(SessionSubscribeEvent event) {
-        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(
-                event.getMessage(), StompHeaderAccessor.class);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(event.getMessage(), StompHeaderAccessor.class);
         if (accessor == null) return;
 
         String destination = accessor.getDestination();
@@ -48,8 +46,7 @@ public class DMWebSocketEventListener {
 
     @EventListener
     void onUnsubscribe(SessionUnsubscribeEvent event) {
-        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(
-                event.getMessage(), StompHeaderAccessor.class);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(event.getMessage(), StompHeaderAccessor.class);
         if (accessor == null) return;
 
         String destination = (String) accessor.getSessionAttributes().get(accessor.getSubscriptionId());
@@ -67,8 +64,7 @@ public class DMWebSocketEventListener {
 
     @EventListener
     void onDisconnect(SessionDisconnectEvent event) {
-        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(
-                event.getMessage(), StompHeaderAccessor.class);
+        StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(event.getMessage(), StompHeaderAccessor.class);
         if (accessor == null) return;
         if (event.getUser() == null) return;
         if (accessor.getSessionAttributes() == null || accessor.getSessionAttributes().isEmpty()) return;

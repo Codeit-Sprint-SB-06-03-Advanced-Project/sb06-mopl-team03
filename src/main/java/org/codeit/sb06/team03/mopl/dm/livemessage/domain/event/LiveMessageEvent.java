@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.codeit.sb06.team03.mopl.dm.conversation.domain.vo.DMUser;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -21,6 +22,8 @@ public abstract sealed class LiveMessageEvent {
         private final UUID receiverId;
         private final String content;
         private final Instant createdAt;
+        private final DMUser sender;
+        private final DMUser receiver;
     }
 
     @Getter

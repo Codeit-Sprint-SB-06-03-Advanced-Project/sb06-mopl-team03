@@ -16,9 +16,15 @@ public class LoadLiveMessageAdapter implements LoadLiveMessagePort {
     private final LiveMessageRepository liveMessageRepository;
 
     @Override
-    public List<LiveMessage> findAll(UUID conversationId, String cursor, String idAfter,
-                                     int limit, boolean ascending, String sortBy) {
-        return liveMessageRepository.findAll(conversationId, cursor, idAfter, limit, ascending, sortBy);
+    public List<LiveMessage> findAll(
+            UUID conversationId,
+            String cursor,
+            String idAfter,
+            int limit,
+            boolean ascending,
+            String sortBy
+    ) {
+        return liveMessageRepository.findAll(conversationId, cursor, idAfter, limit + 1, ascending, sortBy);
     }
 
     @Override

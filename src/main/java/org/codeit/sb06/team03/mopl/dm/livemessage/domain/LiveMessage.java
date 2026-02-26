@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.codeit.sb06.team03.mopl.dm.conversation.domain.vo.DMUser;
 import org.codeit.sb06.team03.mopl.dm.livemessage.domain.event.LiveMessageEvent;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.domain.AbstractAggregateRoot;
@@ -51,7 +52,7 @@ public class LiveMessage extends AbstractAggregateRoot<LiveMessage> {
     @Column(name = "has_unread", nullable = false)
     private boolean hasUnread;
 
-    public static LiveMessage create(UUID conversationId, UUID senderId, UUID receiverId, String content) {
+    public static LiveMessage create(UUID conversationId, UUID senderId, UUID receiverId, String content, DMUser sender, DMUser receiver) {
         var liveMessage = new LiveMessage();
         liveMessage.id = UUID.randomUUID();
         liveMessage.createdAt = Instant.now();
@@ -60,7 +61,7 @@ public class LiveMessage extends AbstractAggregateRoot<LiveMessage> {
         liveMessage.receiverId = receiverId;
         liveMessage.content = content;
         liveMessage.hasUnread = true;
-        liveMessage.registerEvent(new LiveMessageEvent.MessageSentEvent(liveMessage.id, conversationId, senderId, receiverId, content, liveMessage.createdAt));
+        liveMessage.registerEvent(new LiveMessageEvent.MessageSentEvent(liveMessage.id, conversationId, senderId, receiverId, content, liveMessage.createdAt, sender, receiver));
         return liveMessage;
     }
 

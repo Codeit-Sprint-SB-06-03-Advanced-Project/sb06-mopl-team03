@@ -19,7 +19,7 @@ public class DMWebSocketController {
 
     private final BffDMService bffDMService;
 
-    @MessageMapping("/conversations/{conversationId}/messages")
+    @MessageMapping("/conversations/{conversationId}/direct-messages")
     public void sendMessage(
             @DestinationVariable String conversationId,
             @Payload MessageSendRequest request,
