@@ -14,4 +14,20 @@ public class ConversationService {
         }
         return Conversation.create(userId, withUserId);
     }
+
+    public void markAsRead(Conversation conversation, UUID userId) {
+        conversation.markAsRead(userId);
+    }
+
+    public void markAsUnread(Conversation conversation, UUID userId) {
+        conversation.markAsUnread(userId);
+    }
+
+    public void joinLiveMessage(Conversation conversation, UUID userId) {
+        conversation.joinLiveMessage(userId);
+    }
+
+    public void leaveLiveMessage(Conversation conversation, UUID userId) {
+        conversation.leaveLiveMessage(userId);
+    }
 }

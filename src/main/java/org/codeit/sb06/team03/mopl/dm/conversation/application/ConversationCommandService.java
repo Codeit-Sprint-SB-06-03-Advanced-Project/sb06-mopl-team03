@@ -39,7 +39,7 @@ public class ConversationCommandService implements CreateConversationUseCase, Me
         Conversation conversation = loadConversationPort.findById(command.conversationId())
                 .orElseThrow(() -> new ConversationNotFoundException(command.conversationId()));
 
-        conversation.markAsRead(command.userId());
+        conversationService.markAsRead(conversation, command.userId());
         saveConversationPort.save(conversation);
 
         saveLiveMessagePort.markAsRead(command.directMessageId());
@@ -50,7 +50,7 @@ public class ConversationCommandService implements CreateConversationUseCase, Me
         Conversation conversation = loadConversationPort.findById(conversationId)
                 .orElseThrow(() -> new ConversationNotFoundException(conversationId));
 
-        conversation.markAsUnread(receiverId);
+        conversationService.markAsUnread(conversation, receiverId);
         saveConversationPort.save(conversation);
     }
 
@@ -59,7 +59,7 @@ public class ConversationCommandService implements CreateConversationUseCase, Me
         Conversation conversation = loadConversationPort.findById(command.conversationId())
                 .orElseThrow(() -> new ConversationNotFoundException(command.conversationId()));
 
-        conversation.joinLiveMessage(command.userId());
+        conversationService.joinLiveMessage(conversation, command.userId());
         saveConversationPort.save(conversation);
     }
 
@@ -68,7 +68,7 @@ public class ConversationCommandService implements CreateConversationUseCase, Me
         Conversation conversation = loadConversationPort.findById(command.conversationId())
                 .orElseThrow(() -> new ConversationNotFoundException(command.conversationId()));
 
-        conversation.leaveLiveMessage(command.userId());
+        conversationService.leaveLiveMessage(conversation, command.userId());
         saveConversationPort.save(conversation);
     }
 }
