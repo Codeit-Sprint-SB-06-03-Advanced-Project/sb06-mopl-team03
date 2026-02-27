@@ -16,10 +16,7 @@ import org.codeit.sb06.team03.mopl.dm.livemessage.infra.in.request.MessageSendRe
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -99,7 +96,7 @@ public class BasicBffDMService implements BffDMService {
         UUID userId = getCurrentUserId();
         CreateConversationCommand command = dmMapper.toCommand(request.withUserId());
         Conversation conversation = createConversationUseCase.create(userId, command);
-        return toConversationDto(conversation, userId);
+        return toConversationDto(conversation, userId, null);
     }
 
     @Override
@@ -115,8 +112,10 @@ public class BasicBffDMService implements BffDMService {
     @Override
     public ConversationDto getConversation(String conversationId) {
         UUID userId = getCurrentUserId();
-        Conversation conversation = getConversationUseCase.findById(userId, UUID.fromString(conversationId));
-        return toConversationDto(conversation, userId);
+        UUID convId = UUID.fromString(conversationId);
+        Conversation conversation = getConversationUseCase.findById(userId, convId);
+        Optional<LiveMessage> liveMessage = getDirectMessageUseCase.findLatestByConversationId(convId);
+        return toConversationDto(conversation, userId, liveMessage);
     }
 
     @Override
@@ -170,7 +169,7 @@ public class BasicBffDMService implements BffDMService {
     public ConversationDto getConversationWith(String withUserId) {
         UUID userId = getCurrentUserId();
         Conversation conversation = getConversationUseCase.findByWith(userId, UUID.fromString(withUserId));
-        return toConversationDto(conversation, userId);
+        return toConversationDto(conversation, userId, null);
     }
 
     @Override
@@ -184,14 +183,20 @@ public class BasicBffDMService implements BffDMService {
         messageSendUseCase.send(new MessageSendCommand(convId, senderUuid, receiverId, request.content()));
     }
 
-    private ConversationDto toConversationDto(Conversation conversation, UUID userId) {
+    private ConversationDto toConversationDto(Conversation conversation, UUID userId, Optional<LiveMessage> liveMessage) {
         UUID withUserId = conversation.getOtherParticipant(userId);
         DMUser with = getDMUserUseCase.findByUserId(withUserId);
+        DirectMessageDto latestMessage = liveMessage
+                .map(msg -> {
+                    DMUser me = getDMUserUseCase.findByUserId(userId);
+                    return toDirectMessageDto(msg, Map.of(withUserId, with, userId, me));
+                })
+                .orElse(null);
 
         return new ConversationDto(
                 conversation.getId().toString(),
                 DMUserDto.from(with),
-                null,
+                latestMessage,
                 false
         );
     }
