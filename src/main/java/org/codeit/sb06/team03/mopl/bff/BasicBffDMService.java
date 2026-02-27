@@ -96,7 +96,7 @@ public class BasicBffDMService implements BffDMService {
         UUID userId = getCurrentUserId();
         CreateConversationCommand command = dmMapper.toCommand(request.withUserId());
         Conversation conversation = createConversationUseCase.create(userId, command);
-        return toConversationDto(conversation, userId, null);
+        return toConversationDto(conversation, userId, Optional.empty());
     }
 
     @Override
@@ -169,7 +169,7 @@ public class BasicBffDMService implements BffDMService {
     public ConversationDto getConversationWith(String withUserId) {
         UUID userId = getCurrentUserId();
         Conversation conversation = getConversationUseCase.findByWith(userId, UUID.fromString(withUserId));
-        return toConversationDto(conversation, userId, null);
+        return toConversationDto(conversation, userId, Optional.empty());
     }
 
     @Override
