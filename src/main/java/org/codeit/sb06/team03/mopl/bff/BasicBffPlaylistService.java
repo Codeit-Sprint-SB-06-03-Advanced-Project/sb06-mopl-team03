@@ -20,6 +20,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -58,7 +59,7 @@ public class BasicBffPlaylistService implements BffPlaylistService {
                 userDetails.getUserDto().name(),
                 userDetails.getUserDto().profileImageUrl());
 
-        return PlaylistDto.toDto(playlist, owner, false /*, Collections.emptyList*/);
+        return PlaylistDto.toDto(playlist, owner, false , Collections.emptyList()); // TODO
     }
 
     @Override
@@ -82,8 +83,8 @@ public class BasicBffPlaylistService implements BffPlaylistService {
                 .map(readModel -> PlaylistDto.toDto(
                         readModel,
                         owners.get(readModel.ownerId()),
-                        subscribedByMe.getOrDefault(readModel.id(), false)
-                        // TODO contents
+                        subscribedByMe.getOrDefault(readModel.id(), false),
+                        Collections.emptyList() // TODO
                 ))
                 .toList();
 
@@ -116,7 +117,7 @@ public class BasicBffPlaylistService implements BffPlaylistService {
 
         boolean subscribedByMe = getSubscriptionUseCase.isSubscribed(playlistId, viewerId);
         // TODO contents
-        return PlaylistDto.toDto(readModel, owner, subscribedByMe/*, contents*/);
+        return PlaylistDto.toDto(readModel, owner, subscribedByMe, Collections.emptyList());
     }
 
     @Override
@@ -133,7 +134,7 @@ public class BasicBffPlaylistService implements BffPlaylistService {
                 userDetails.getUserDto().name(),
                 userDetails.getUserDto().profileImageUrl());
         // TODO contents
-        return PlaylistDto.toDto(playlist, owner, false /*, contents*/);
+        return PlaylistDto.toDto(playlist, owner, false , Collections.emptyList());
     }
 
     @Override

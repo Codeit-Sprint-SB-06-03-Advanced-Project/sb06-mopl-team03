@@ -36,13 +36,13 @@ public class SseService implements SseUseCase {
         // 연결되면 더미 이벤트 전송, 연결 확인
         ping(emitter, receiverId, "connect check");
 
-        // TODO 마지막으로 받은 메시지 이후 유실된 메시지 재전송
-//        if (lastEventId != null) {
-//            SseMessage lastMessage = sseMessagePort.findLastMessageByUserId(receiverId);
-//            if (lastMessage != null) {
-//                sendToClient(emitter, receiverId, "re-delivery", lastMessage);
-//            }
-//        }
+        // 마지막으로 받은 메시지 이후 유실된 메시지 재전송
+        if (lastEventId != null) {
+            List<SseMessage> missedMessages = sseMessagePort.findAllMissedMessageByUserIdAndIdAfter(receiverId, lastEventId);
+            missedMessages.forEach(message ->
+                    sendToClient(emitter, receiverId, message.eventName(), message.data(), message.id().toString())
+            );
+        }
 
         return emitter;
     }
@@ -65,7 +65,7 @@ public class SseService implements SseUseCase {
         sseMessagePort.saveMessage(sseMessage, receiverId);
 
         List<SseEmitter> emitters = sseEmitterPort.findByUserId(receiverId);
-        emitters.forEach(emitter -> sendToClient(emitter, receiverId, eventName, data));
+        emitters.forEach(emitter -> sendToClient(emitter, receiverId, eventName, data, sseMessage.id().toString()));
     }
 
     public void sendAll(Map<UUID, Object> objectMap, String eventName) {
@@ -83,10 +83,10 @@ public class SseService implements SseUseCase {
         Map<UUID, List<SseEmitter>> emitterMap = sseEmitterPort.findAllByUserIdIn(receiverIds);
 
         emitterMap.forEach((userId, emitters) -> {
-            SseMessage message = sseMessageMap.get(userId);
-            if (message != null) {
+            SseMessage sseMessage = sseMessageMap.get(userId);
+            if (sseMessage != null) {
                 emitters.forEach(emitter ->
-                        sendToClient(emitter, userId, eventName, message.data())
+                        sendToClient(emitter, userId, eventName, sseMessage.data(), sseMessage.id().toString())
                 );
             }
         });
@@ -100,8 +100,25 @@ public class SseService implements SseUseCase {
     // 만료된 SseEmitter 삭제
     @Scheduled(fixedDelay = 1000 * 60 * 30)
     public void cleanUp() {
-        // TODO sseRepository를 순회하며 삭제
         log.info("SSE Emitter clean up task started.");
+
+        Set<UUID> userIds = sseEmitterPort.findAllConnectedUserIds();
+
+        int removedCount = 0;
+        for (UUID userId : userIds) {
+            List<SseEmitter> emitters = sseEmitterPort.findByUserId(userId);
+
+            for (SseEmitter emitter : emitters) {
+                try {
+                    emitter.send(SseEmitter.event().name("cleanup-ping").data("check"));
+                } catch (Exception e) {
+                    sseEmitterPort.delete(emitter, userId);
+                    removedCount++;
+                }
+            }
+        }
+
+        log.info("SSE Emitter clean up task finished. Removed {} zombie emitters.", removedCount);
     }
 
     /**
@@ -109,15 +126,20 @@ public class SseService implements SseUseCase {
      */
 
     private void ping(SseEmitter sseEmitter, UUID userId, String message) {
-        sendToClient(sseEmitter, userId, "ping", message);
+        sendToClient(sseEmitter, userId, "ping", message, null);
     }
 
-    private void sendToClient(SseEmitter emitter, UUID userId, String eventName, Object data/*, String eventId*/) {
+    private void sendToClient(SseEmitter emitter, UUID userId, String eventName, Object data, String eventId) {
         try {
-            emitter.send(SseEmitter.event()
-                    .id(UUID.randomUUID().toString())
+            SseEmitter.SseEventBuilder eventBuilder = SseEmitter.event()
                     .name(eventName)
-                    .data(data));
+                    .data(data);
+            if (eventId != null && !eventId.isBlank()) {
+                eventBuilder.id(eventId);
+            }
+
+            emitter.send(eventBuilder);
+
         } catch (IOException e) {
             sseEmitterPort.delete(emitter, userId);
             log.error("SSE send failed. removing connection: {}", userId);
