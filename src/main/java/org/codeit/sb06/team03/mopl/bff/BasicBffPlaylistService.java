@@ -14,7 +14,6 @@ import org.codeit.sb06.team03.mopl.playlist.infra.in.response.CursorResponsePlay
 import org.codeit.sb06.team03.mopl.playlist.infra.in.response.PlaylistDto;
 import org.codeit.sb06.team03.mopl.playlist.infra.in.response.UserSummaryDto;
 import org.codeit.sb06.team03.mopl.user.application.in.GetProfileUseCase;
-import org.codeit.sb06.team03.mopl.user.application.out.LoadProfilePort;
 import org.codeit.sb06.team03.mopl.user.domain.Profile;
 import org.codeit.sb06.team03.mopl.user.domain.exception.ProfileNotFoundException;
 import org.springframework.data.domain.Slice;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -44,7 +42,6 @@ public class BasicBffPlaylistService implements BffPlaylistService {
 
     private final GetProfileUseCase getProfileUseCase;
     private final GetSubscriptionUseCase getSubscriptionUseCase;
-    private final LoadProfilePort loadProfilePort;
 //    private final GetContentUseCase getContentUseCase;
 
     @Override
@@ -70,7 +67,7 @@ public class BasicBffPlaylistService implements BffPlaylistService {
         List<PlaylistReadModel> readModels = slice.getContent();
 
         List<UUID> ownerIds = readModels.stream().map(PlaylistReadModel::ownerId).toList();
-        List<Profile> profileList = loadProfilePort.load(ownerIds);
+        List<Profile> profileList = getProfileUseCase.load(ownerIds);
         Map<UUID, UserSummaryDto> owners = profileList.stream()
                 .collect(Collectors.toMap(
                         Profile::getAccountId,

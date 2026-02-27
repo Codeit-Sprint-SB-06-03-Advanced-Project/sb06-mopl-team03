@@ -5,6 +5,7 @@ import org.codeit.sb06.team03.mopl.common.security.jwt.exception.InvalidTokenExc
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -93,6 +94,7 @@ public class PersistentJwtRegistry implements JwtRegistry {
     }
 
     @Override
+    @Transactional // 없으면 에러 발생
     @Scheduled(fixedDelay = 1000 * 60 * 5)
     public void clearExpiredTokenSession() {
         tokenSessionRepository.deleteExpiredTokenSessions();

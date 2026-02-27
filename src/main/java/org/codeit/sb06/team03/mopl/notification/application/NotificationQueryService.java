@@ -4,14 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.codeit.sb06.team03.mopl.account.domain.exception.InvalidIdentifierException;
 import org.codeit.sb06.team03.mopl.notification.application.in.GetNotificationsUseCase;
 import org.codeit.sb06.team03.mopl.notification.application.out.LoadNotificationsPort;
-import org.codeit.sb06.team03.mopl.notification.domain.Notification;
 import org.codeit.sb06.team03.mopl.notification.infra.in.CursorRequestNotificationDto;
 import org.codeit.sb06.team03.mopl.notification.infra.in.CursorResponseNotificationDto;
 import org.codeit.sb06.team03.mopl.notification.infra.in.NotificationDto;
 import org.codeit.sb06.team03.mopl.notification.infra.out.CursorGetNotificationsCondition;
-import org.hibernate.query.SortDirection;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

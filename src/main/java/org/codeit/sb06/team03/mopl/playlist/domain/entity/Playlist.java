@@ -6,14 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "playlists")
+@Table(
+        name = "playlists",
+        indexes = { @Index(name = "idx_updatedAt_cursor", columnList = "updatedAt, id") }
+)
 public class Playlist {
 
     @Id
